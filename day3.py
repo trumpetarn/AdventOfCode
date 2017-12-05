@@ -12,7 +12,6 @@ def isAnagram(words):
   sorted_words = []
   for word in words:
     sorted_words.append("".join(sorted(word)))
-  print(sorted_words)
   return len(list(set(sorted_words))) == len(sorted_words)
 
 def isValid(strings, task):
@@ -31,5 +30,5 @@ def task2(input, isFile=True):
       valid = valid + 1
   return valid
 
-print("Task1\nNumber of valid Passphrases:", task1('/home/jakob/Skrivbord/input.txt'))
-print("---\nTask2\nNumber of valid Passphrases:", task2('/home/jakob/Skrivbord/input.txt'))
+print("Task1\nNumber of valid Passphrases:", task1('inputs/input_day3.txt'))
+print("---\nTask2\nNumber of valid Passphrases:", task2('inputs/input_day3.txt'))
