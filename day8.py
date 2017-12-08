@@ -61,7 +61,3 @@ def tasks():
   print "Task2:", maximum
 
 tasks()
-
-
-
-
