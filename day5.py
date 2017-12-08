@@ -1,8 +1,8 @@
 import threading
 import time
 
-def populate_list(filename='input.txt'):
-	file = open('input.txt')
+def populate_list(filename='inputs/input_day5.txt'):
+	file = open(filename)
 	mylist = filter(None, list(file.read().split('\n')))
 	return map(int, mylist)
 
@@ -48,9 +48,9 @@ def task2():
 	print "Number of steps", steps
 
 def main():
-	t = threading.Thread(target=task2)
+	t = threading.Thread(target=task1)
 	t.start()
-	task1()
+	task2()
 	t.join()
 	
 print "Parallel"
