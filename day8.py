@@ -14,8 +14,8 @@ def less_than_equal(a,b):
   return a <= b
 
 def larger_than_equal(a,b):
-  return a >= b
-
+  return a >= 
+b
 def init_memory(instructions):
 	memory = [[],[]]
 	for name in instructions:
@@ -40,13 +40,9 @@ def tasks():
                 '>=' : larger_than_equal}
   maximum = ('name', 0)              
   for instr in instructions:
-    #instr[0] : name
-    #instr[1] : inc/dec (+/-)
-    #instr[2] : val
-    #instr[3] : if
-    #instr[4] : comp_name
-    #instr[5] : operation (==, !=, <, > , <=, >=)
-    #instr[6] : comp_val
+    #instr[0] : name      #instr[1] : inc/dec (+/-)
+    #instr[2] : val       #instr[4] : comp_name 
+    #instr[5] : operation #instr[6] : comp_val
     comp_id = mem[0].index(instr[4])
     if (operations[instr[5]](mem[1][comp_id],int(instr[6]))):
       idx = mem[0].index(instr[0])
