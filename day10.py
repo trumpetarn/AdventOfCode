@@ -23,8 +23,8 @@ def string_to_ascii(s):
 def create_hashstring(lst):
 	hstr = ""
 	for i in lst:
-		hstr += str(hex(i))
-	return hstr.replace('0x','')
+		hstr += str(hex(i)[2:]).zfill(2)
+	return hstr
 
 def generate_hash(numbers, div=16):
 	blocks = len(numbers)/div
@@ -36,15 +36,8 @@ def generate_hash(numbers, div=16):
 		xor.append(tmp)
 	return create_hashstring(xor)
 
-def task1():
-	N = list(range(0,256))
-	lengths = [83,0,193,1,254,237,187,40,88,27,2,255,149,29,42,100]
-	numbers,_,_ = knoting(lengths, N)
-	print "Task 1:", numbers[0]*numbers[1]
-
-def task2():
+def generate_knothash(in_data):
 	numbers = list(range(0,256))
-	in_data = "83,0,193,1,254,237,187,40,88,27,2,255,149,29,42,100"
 	buff = [17, 31, 73, 47, 23]
 	lengths = string_to_ascii(in_data) + buff
 	p=0
@@ -52,7 +45,24 @@ def task2():
 	for i in range(0,64):
 		numbers,p,s = knoting(lengths, numbers, pos=p, skip=s)
 	xor = generate_hash(numbers)
+	return xor
+
+def task1():
+	N = list(range(0,256))
+	lengths = [83,0,193,1,254,237,187,40,88,27,2,255,149,29,42,100]
+	numbers,_,_ = knoting(lengths, N)
+	print "Task 1:", numbers[0]*numbers[1]
+
+def task2():
+	in_data = "83,0,193,1,254,237,187,40,88,27,2,255,149,29,42,100"
+	xor = generate_knothash(in_data)
 	print "Task 2:",xor
 
-task1()
-task2()
+# stuff to run always here such as class/def
+def main():
+	task1()
+	task2()
+
+if __name__ == "__main__":
+   # stuff only to run when not called via 'import' here
+   main()
