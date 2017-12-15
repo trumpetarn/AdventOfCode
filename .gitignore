@@ -1,3 +1,4 @@
 # Binaries
 *.o
 *.out
+*.pyc

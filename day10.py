@@ -58,11 +58,9 @@ def task2():
 	xor = generate_knothash(in_data)
 	print "Task 2:",xor
 
-# stuff to run always here such as class/def
 def main():
 	task1()
 	task2()
 
 if __name__ == "__main__":
-   # stuff only to run when not called via 'import' here
    main()
