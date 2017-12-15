@@ -31,6 +31,7 @@ def get_neighbors(i,j, size=128):
 	return nums
 
 def grid_printer(grid, N):
+	'''Used for debugging mostly'''
 	for i in range(0,N):
 		print grid[i][:N]
 
@@ -49,14 +50,13 @@ def find_groups(grid):
 		for j in range(0,len(grid)):
 			if grouping(grid, i, j, str(hex(group_id)[-1])):
 				group_id += 1
-	grid_printer(grid, 8)
 	return group_id
 
 def main():
 	in_data = "hwlqcszp"
 	grid, num_used = generate_grid(in_data)
-	print find_groups(grid)
 	print "Task 1:",num_used
+	print "Task 2;",find_groups(grid)
 
 if __name__ == "__main__":
 	main()

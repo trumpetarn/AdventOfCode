@@ -14,8 +14,8 @@ def less_than_equal(a,b):
   return a <= b
 
 def larger_than_equal(a,b):
-  return a >= 
-b
+  return a >= b
+
 def init_memory(instructions):
 	memory = [[],[]]
 	for name in instructions:

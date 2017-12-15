@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 def task1(input, isFile=True):
   if (isFile):
     input = open(input)
