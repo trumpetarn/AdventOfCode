@@ -21,7 +21,7 @@ void init_scanner()
 		scanner[i] = 0;
 	}
 
-	FILE *fp = fopen("/git/AdventOfCode/inputs/input_day13.txt", "r");
+	FILE *fp = fopen("/git/AdventOfCode/2017/inputs/input_day13.txt", "r");
 	for (int i=0;i<LINES;i++)
 	{
 		fscanf(fp, "%d: %d\n", &a,&b);
