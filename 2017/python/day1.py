@@ -10,10 +10,11 @@ def task(bias):
       if (item == input[(idx+bias)%length]):
           sum = sum + int(item)
 
-  print "Lenght:", length
   print "Bias:", bias, "(", (bias*1.0/length)*100, "%)"
   print "Sum:", sum
   print "Time: ", (time.time()-start)*1000, "ms"
 
+print "Length:", len(input)
 task(1)
 task(len(input)/2)
+task(4)

@@ -15,7 +15,7 @@ coords generate_map(char map[SIZE][SIZE])
 	coords start= {0,0};
 	int i=0;
 	int j=0;
-	FILE *fp = fopen("/git/AdventOfCode/2017/inputs/input_day19.txt", "r");
+	FILE *fp = fopen("/repo/AdventOfCode/2017/inputs/input_day19.txt", "r");
 	while ((c = getc(fp)) != EOF)
 	{
 		if (i==0 && c=='|')
