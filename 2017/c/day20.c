@@ -14,6 +14,7 @@ typedef struct Particle{
 	coords p;
 	coords v;
 	coords a;
+	int death_tick;
 	bool alive;
 }particle;
 
@@ -36,6 +37,7 @@ void init(void){
 		particles[i].a.x = ax;
 		particles[i].a.y = ay;
 		particles[i].a.z = az;
+		particles[i].death_tick = -1;
 		particles[i].alive = true;
 	}
 	fclose(fp);
@@ -69,20 +71,16 @@ bool is_equal(coords a, coords b) {
 }
 
 /* Returns number of collitions */
-int collition_detection(int len) {
-	int collitions;
-	for (int i=0; i<len-1; i++) {
-		if (particles[i].alive) {
-			for (int j=i+1; j<len; j++) {
-				if (particles[i].alive && is_equal(particles[i].p, particles[j].p)) {
-					collitions++;
-					particles[i].alive = false;
-					particles[j].alive = false;
-				}
-			}
+bool collition_detection(int len, coords c, int i) {
+	bool ret = false;
+	for (int j=0; j<len; j++) {
+		if (particles[j].alive && is_equal(c, particles[j].p)) {
+			//printf("%d:", j);
+			particles[j].death_tick = i;
+			ret = true;
 		}
 	}
-	return collitions;
+	return ret;
 }
 
 int find_lowest_acc(int lowest_p[N]) {
@@ -103,6 +101,15 @@ int find_lowest_acc(int lowest_p[N]) {
 	}
 }
 
+void kill_particles(int k) {
+	for (int i=0; i<N; i++) {
+		if (particles[i].death_tick == k) {
+			particles[i].alive = false;
+			//printf("%d ", i);
+		}
+	}
+}
+
 int still_alive(void) {
 	int alive = 0;
 	for (int i=0; i<N; i++) {
@@ -112,34 +119,39 @@ int still_alive(void) {
 	return alive;
 }
 
+/* TODO: Improve efficency */
 int main(void){
 	init();
 	int closest = 100000000;
-	int acc, k, small, l, collitions =0;
+	int acc, idx_len, small, l, collitions =0;
 	int index[N];
-	k = find_lowest_acc(index);
-	while (true) {
-		closest = 100000000;
-		for (int i=0; i<k; i++) {
-			accelerate(&particles[index[i]]);
-			move(&particles[index[i]]);
-			small = manhattan(particles[index[i]].p);
-			if (small < closest) {
-				closest = small;
-				l = index[i];
+	idx_len = find_lowest_acc(index);
+	for (int k=0; k<100; k++) {
+		closest = 100000000;	
+		for (int i=0; i<N; i++) {
+			if (k==0) {
+				if (collition_detection(i, particles[i].p, k)) {
+					printf("%s\n", "HEj");
+					particles[i].death_tick = k;
+				}
+			}else if (particles[i].alive) {
+				accelerate(&particles[i]);
+				move(&particles[i]);
+				if (collition_detection(i, particles[i].p, k)) {
+					particles[i].death_tick = k;
+				}
+			}
+			if (i<idx_len) {
+				small = manhattan(particles[index[i]].p);
+				if (small < closest) {
+					closest = small;
+					l = index[i];
+				}
 			}
 		}
-		if (closest >= 100000000/100)
-			break; //Asume that the closest one at this range will win over time 
+		kill_particles(k);
 	}
 	printf("Part 1: %d\n", l);
-	for (int k=0; k<10000; k++) {
-		for (int i=0; i<N; i++) {
-			accelerate(&particles[i]);
-			move(&particles[i]);
-		}
-		collitions += collition_detection(N);
-	}
 	printf("Part 2: %d\n", still_alive());
 	return 0;
 }
