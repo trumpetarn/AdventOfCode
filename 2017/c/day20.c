@@ -129,12 +129,7 @@ int main(void){
 	for (int k=0; k<100; k++) {
 		closest = 100000000;	
 		for (int i=0; i<N; i++) {
-			if (k==0) {
-				if (collition_detection(i, particles[i].p, k)) {
-					printf("%s\n", "HEj");
-					particles[i].death_tick = k;
-				}
-			}else if (particles[i].alive) {
+			if (particles[i].alive) {
 				accelerate(&particles[i]);
 				move(&particles[i]);
 				if (collition_detection(i, particles[i].p, k)) {
