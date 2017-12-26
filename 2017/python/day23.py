@@ -40,7 +40,6 @@ def read_instruction(reg, line, idx):
 
 def task1():
 	global MUL
-	global H
 	idx = 0
 	file = open("inputs/input_day23.txt")
 	instructions = file.read().split('\n')
@@ -57,7 +56,7 @@ def isPrime(n):
 		if n%i==0:
 			return False    
 	return True	
-	
+
 task1()
 # Part 2
 """We are calculating all non primes between 109300 and 126300"""

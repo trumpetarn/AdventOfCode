@@ -273,7 +273,6 @@ print h
 
 === Optimized? ===
 """We are calculating all non primes between 109300 and 126300"""
-
 for b in range(109300,126300+1,17):
 	if not prime(b):
 		h += 1
