@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <regex>
 
 using namespace std;
 
@@ -38,11 +39,38 @@ vector<string> part_one(){
 	return input;
 }
 
+
 int part_two(vector<string> input)
 {
+	string str, rx;
+	int diff=0;
+	//TODO: Something less bruteforce should be possible
 	for (auto it=input.begin(); it != input.end(); it++)
 	{
-		
+		for (auto iter=input.begin(); iter != input.end(); iter++)
+		{
+			diff = 0;
+			for (string::size_type i=0; i<it->length(); i++)
+			{
+				if ((*iter)[i]!=(*it)[i])
+					diff++;
+				if (diff>1)
+					break;
+			}
+			if (diff==1)
+			{
+				cout << "Part 2: ";
+				for (string::size_type i=0; i<it->length(); i++)
+				{	
+					if ((*iter)[i]==(*it)[i])
+						cout << (*iter)[i];
+				}
+				cout << '\n';
+				break;
+			}
+		}
+		if (diff==1)
+			break;
 	}
 	return 0;
 }
