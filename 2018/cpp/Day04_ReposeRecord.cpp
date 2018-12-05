@@ -102,11 +102,12 @@ date_t next_day(date_t day)
 			length = 0;
 			cout << "WTF!" << endl;
 	}
-	if (day.day==length)
+	day.day++;
+	if (day.day>length)
 	{
 		day.day = 1;
 		day.month++;
-		if (day.month==13)
+		if (day.month>12)
 		{
 			day.month = 1;
 			day.year++;
@@ -118,7 +119,8 @@ date_t next_day(date_t day)
 void part_one(vector<string> in)
 {
 	map<date_t, entry_t> guard_info;
-	map<int, entry_t> sleep_time;
+	map<int, entry_t> guard_info2;
+	map<int, int> sleep_time;
 	for (auto it=in.begin(); it!=in.end(); it++)
 	{
 		date_t temp_date;
@@ -127,7 +129,6 @@ void part_one(vector<string> in)
 		temp_date.year = stoi((*it).substr(1,4));
 		temp_date.month = stoi((*it).substr(6,7));
 		temp_date.day = stoi((*it).substr(9,10));
-
 		temp.hour = stoi((*it).substr(12,13));
 		temp.min = stoi((*it).substr(15,16));
 		// Set date to next day since shift really starts at midnight
@@ -137,8 +138,8 @@ void part_one(vector<string> in)
 			temp.hour = 0;
 			temp.min = 0;
 		}
-
 		temp.date = temp_date;
+
 		if (guard_info.find(temp_date) != guard_info.end())
 		{
 			entry = guard_info[temp_date];
@@ -148,45 +149,54 @@ void part_one(vector<string> in)
 		if ((*it).compare(19,5,"Guard")==0)
 		{
 			entry.id = stoi((*it).substr(26,33));
-			//entry.awake.push_back(temp);
-			guard_info[temp_date] = entry;
 		}
 		else if ((*it).compare(19,5,"falls")==0)
 		{
 			entry.asleep.push_back(temp);
-			guard_info[temp_date] = entry;
 		}
 		else if ((*it).compare(19,5,"wakes")==0)
 		{
 			entry.awake.push_back(temp);
-			guard_info[temp_date] = entry;
 		}
 		else
 		{
 			cout << "WTF!" << endl;
 		}
+		guard_info[temp_date] = entry;
+		//cout << guard_info[temp_date].asleep.size() << ',';
 	}
 
 	for (auto iter = guard_info.begin(); iter!=guard_info.end(); iter++)
 	{
 		if (iter->second.id != 0)
 		{
-			sleep_time[iter->second.id] = iter->second;
-			//cout << minutes_asleep(iter->second.asleep[0],iter->second.awake[0]);
 			sort(iter->second.awake.begin(),iter->second.awake.end());
 			sort(iter->second.asleep.begin(),iter->second.asleep.end());
-			for (int i=0; i< (int)iter->second.awake.size(); i++)
-			{
-				cout << iter->second.awake[i].hour << ':' << iter->second.awake[i].min << ',';
-			}
-			cout << endl;
 			for (int j=0; j< (int)iter->second.asleep.size(); j++)
 			{
-				cout << iter->second.asleep[j].hour << ':' << iter->second.asleep[j].min << ',';
+				if (sleep_time.find(iter->second.id) == sleep_time.end())
+				{
+					sleep_time[iter->second.id] = 0;	
+				}
+				sleep_time[iter->second.id] += minutes_asleep(iter->second.asleep[j], iter->second.awake[j]);
+				guard_info2[iter->second.id].asleep.push_back(iter->second.asleep[j]);
+				guard_info2[iter->second.id].awake.push_back(iter->second.awake[j]);
 			}
-			cout << endl << endl;
+		} else {
+			cout << "x\n";
 		}
 	}
+	int max_time = 0;
+	int max_id = 0;
+	for (auto it2 = sleep_time.begin(); it2 != sleep_time.end(); it2++)
+	{
+		if (it2->second > max_time)
+		{
+			max_time = it2->second;
+			max_id = it2->first;
+		}
+	}
+	cout << max_id << ':' << guard_info2[max_id].asleep.size() << endl;
 }
 
 int main (int, char**)
