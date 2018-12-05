@@ -116,7 +116,7 @@ date_t next_day(date_t day)
 	return day;
 }
 
-void part_one(vector<string> in)
+void solution(vector<string> in)
 {
 	map<date_t, entry_t> guard_info;
 	map<int, entry_t> guard_info2;
@@ -218,11 +218,39 @@ void part_one(vector<string> in)
 	}
 	cout << max_min << ':' << max_id << endl;
 	cout << "Task 1: " << max_min*max_id << endl;
+	int max_id2;
+	int maximum_prob = 0;
+	int max_time2;
+	for (auto it3 = guard_info2.begin(); it3!=guard_info2.end(); it3++)
+	{
+		for (int k = 0; k<60; k++)
+		{
+			prob = 0;
+			for (int i = 0; i < (int)it3->second.asleep.size(); i++)
+			{	
+				if ((k >= it3->second.asleep[i].min) && (k < it3->second.awake[i].min))
+					prob++;
+			}
+			if (prob > max_prob)
+			{
+				max_prob = prob;
+				max_min = k;
+			}
+		}
+		if (max_prob > maximum_prob)
+		{
+			maximum_prob = max_prob;
+			max_id2 = it3->first;
+			max_time2 = max_min;
+		}
+	}
+	cout << maximum_prob << ':' << max_id2 << ':' << max_time2 << endl;
+	cout << "Task 2: " << max_time2*max_id2 << endl;
 }
 
 int main (int, char**)
 {
 	vector<string> in = read_input();
-	part_one(in);
+	solution(in);
 	return 0;
 }
