@@ -196,7 +196,28 @@ void part_one(vector<string> in)
 			max_id = it2->first;
 		}
 	}
-	cout << max_id << ':' << guard_info2[max_id].asleep.size() << endl;
+	//sort(guard_info2[max_id].asleep.begin(),guard_info2[max_id].asleep.end());
+	//sort(guard_info2[max_id].awake.begin(),guard_info2[max_id].awake.end());
+	int max_prob=0;
+	int max_min;
+	int prob;
+	for (int k = 0; k<60; k++)
+	{
+		prob = 0;
+		for (int i = 0; i < (int)guard_info2[max_id].asleep.size(); i++)
+		{
+		
+			if ((k >= guard_info2[max_id].asleep[i].min) && (k < guard_info2[max_id].awake[i].min))
+				prob++;
+		}
+		if (prob > max_prob)
+		{
+			max_prob = prob;
+			max_min = k;
+		}
+	}
+	cout << max_min << ':' << max_id << endl;
+	cout << "Task 1: " << max_min*max_id << endl;
 }
 
 int main (int, char**)
