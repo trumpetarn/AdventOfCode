@@ -6,6 +6,7 @@
 #include <vector>
 #include <algorithm>
 #include <map>
+#include <set>
 
 using namespace std;
 
@@ -79,9 +80,9 @@ void part_one(vector<coord_t> cv)
 	{
 		count[j] = 0;
 	}
-	for (int x=min_x; x < max_x; ++x)
+	for (int x=min_x-5; x < max_x+5; ++x)
 	{
-		for (int y = min_y; y < max_y; ++y)
+		for (int y = min_y-5; y < max_y+5; ++y)
 		{
 			smallest = manhattan_distance({x,y},cv[0]);
 			closest[{x,y}] = 0;
@@ -96,10 +97,9 @@ void part_one(vector<coord_t> cv)
 					closest[{x,y}] = -1;
 				}
 			}
-			if (x==min_x||x==max_x||y==min_y||y==max_y)
+			if (x<=min_x||x>=max_x||y<=min_y||y>=max_y)
 			{
-				infinite.push_back(closest[{x,y}]);
-				cout << closest[{x,y}] << endl;
+				infinite.emplace(closest[{x,y}]);
 			}
 			count[closest[{x,y}]]++;
 		}
@@ -110,10 +110,9 @@ void part_one(vector<coord_t> cv)
 		if (count[j] >= max && (find(infinite.begin(),infinite.end(),j) == infinite.end()))
 		{
 			max = count[j] ;
-			cout << j << endl;
 		}
 	}
-	cout << max << endl;
+	cout << "Part 1: " << max << endl;
 }
 
 int main(int, char**)
