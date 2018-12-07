@@ -8,6 +8,7 @@
 #include <map>
 #include <set>
 
+#define SIZE 10000
 using namespace std;
 
 struct coord_t
@@ -55,7 +56,7 @@ vector<coord_t> string_2_coord(vector<string> in)
 	return out;
 }
 
-void part_one(vector<coord_t> cv)
+void part_one_and_two(vector<coord_t> cv)
 {
 	int max_x = cv[0].x;
 	int max_y = cv[0].y;
@@ -75,7 +76,9 @@ void part_one(vector<coord_t> cv)
 	map<coord_t,int> closest;
 	int smallest, temp;
 	int count[cv.size()];
+	int sum_region;
 	set<int> infinite;
+	vector<coord_t> region;
 	for (int j=0; j<(int) cv.size(); j++)
 	{
 		count[j] = 0;
@@ -85,10 +88,12 @@ void part_one(vector<coord_t> cv)
 		for (int y = min_y-5; y < max_y+5; ++y)
 		{
 			smallest = manhattan_distance({x,y},cv[0]);
+			sum_region = smallest;
 			closest[{x,y}] = 0;
 			for (int i = 1; i < (int) cv.size(); ++i)
 			{
 				temp = manhattan_distance({x,y},cv[i]);
+				sum_region += temp;
 				if (temp < smallest)
 				{
 					closest[{x,y}] = i;
@@ -100,6 +105,10 @@ void part_one(vector<coord_t> cv)
 			if (x<=min_x||x>=max_x||y<=min_y||y>=max_y)
 			{
 				infinite.emplace(closest[{x,y}]);
+			}
+			if (sum_region < SIZE)
+			{
+				region.push_back({x,y});
 			}
 			count[closest[{x,y}]]++;
 		}
@@ -113,12 +122,14 @@ void part_one(vector<coord_t> cv)
 		}
 	}
 	cout << "Part 1: " << max << endl;
+	cout << "Part 2: " << region.size() << endl;
+	cout << "Area: " << max_x*max_y << endl;
 }
 
 int main(int, char**)
 {
 	vector<string> in = read_input();
 	vector<coord_t> coords = string_2_coord(in);
-	part_one(coords);
+	part_one_and_two(coords);
 	return 0;
 }
