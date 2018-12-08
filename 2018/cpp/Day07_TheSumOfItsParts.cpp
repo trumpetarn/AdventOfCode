@@ -9,15 +9,15 @@
 #include <set>
 #include <regex>
 #include <stack>
+#define TIME 0
 
 using namespace std;
 
-struct worker
+struct worker_t
 {
-	int id;
 	bool is_working;
 	char task;
-	int time_done;
+	int done_time;
 };
 
 vector<string> read_input(string filename)
@@ -93,29 +93,59 @@ vector<char> part_one(map<char,vector<char>> instr, vector<char> start_candidate
 	return to_do;
 }
 
-vector<char> part_two(map<char,vector<char>> instr, vector<char> start_candidates)
+vector<char> part_two(map<char,vector<char>> instr, vector<char> start_candidates, int num_workers)
 {
-	vector<char> to_do;
+	vector<worker_t> workers;
+	for (int i=0; i < num_workers; i++)
+	{
+		worker_t temp = {false, '0', 0};
+		workers.push_back(temp);
+	}
+	vector<char> done;
+	vector<char> active;
 	vector<char> candidates = start_candidates;
-	while (to_do.size() < instr.size())
+	char last;
+	int time = 0;
+	while (done.size() < instr.size() && time < 10000)
 	{
 		sort(candidates.begin(), candidates.end());
-		char last = candidates[0];
-		candidates.erase(candidates.begin());
-		to_do.push_back(last);
-		for (auto it2 = instr[last].begin(); it2!=instr[last].end();++it2)
+		int i = 0;
+		for (auto it=workers.begin(); it != workers.end(); ++it)
 		{
-			if(has_no_dependecy(*it2, instr, to_do))
-				candidates.push_back(*it2);
+			i++;
+			if ((it->is_working) && (it->done_time == time)){ //done
+				it->is_working = false;
+				done.push_back(it->task);
+				for (auto it2 = instr[it->task].begin(); it2!=instr[it->task].end();++it2)
+				{
+					if(has_no_dependecy(*it2, instr, active))
+						candidates.push_back(*it2);
+				}
+			}
+			//assign
+			if ((!it->is_working) && candidates.size()>0)
+			{
+				last = candidates[0];
+				candidates.erase(candidates.begin());
+				active.push_back(last);
+				it->is_working = true;
+				it->task = last;
+				int task_time = (int) (last - 'A') + 1 +TIME;
+				it->done_time = time+task_time;
+				cout << time << ' ' << i << " Started working: " 
+							<< last << ':' << it->done_time << endl;
+			}
 		}
+		time++;
 	}
-	return to_do;
+	cout << "Time: " << time << endl;
+	return done;
 }
-
 
 int main(int, char**)
 {
-	vector<string> in = read_input("../inputs/day07.txt");
+	//vector<string> in = read_input("../inputs/day07.txt");
+	vector<string> in = read_input("../inputs/day07_example.txt");
 	map<char,vector<char>> instr = parse_input(in);
 	vector<char> to_do;
 	vector<char> candidates;
@@ -128,6 +158,11 @@ int main(int, char**)
 	}	
 	to_do = part_one(instr, candidates);
 	cout << "Task 1: ";
+	for (auto i: to_do)
+		cout << i;
+	cout << endl;
+	to_do = part_two(instr, candidates, 2);
+	cout << "Task 2: ";
 	for (auto i: to_do)
 		cout << i;
 	cout << endl;
