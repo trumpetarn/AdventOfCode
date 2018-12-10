@@ -32,8 +32,8 @@ vector<string> read_input()
 {
 	vector<string> in;
 	string line;
-	//ifstream infile ("../inputs/day08.txt");
-	ifstream infile ("../inputs/day08_example.txt");
+	ifstream infile ("../inputs/day08.txt");
+	//ifstream infile ("../inputs/day08_example.txt");
 	if (infile.is_open())
 	{
 		while (getline(infile,line))
@@ -72,12 +72,12 @@ node_t create_node(vector<int> data, int pos)
 		pos += child.size;
 		//cout << pos << ':';
 	}
-	cout << node.num_child << ':' << node.num_meta_entries << '(';
+	//cout << node.num_child << ':' << node.num_meta_entries << '(';
 	for (int i=0;i<node.num_meta_entries; i++)
 	{
 		int val = data[pos];
 		node.meta.push_back(val);
-		cout << val << ',';
+		//cout << val << ',';
 		pos++;
 	}
 	node.value = 0;
@@ -92,8 +92,8 @@ node_t create_node(vector<int> data, int pos)
 			//cout << '<' << node.value << '>' << endl;
 		}
 	}
-	cout << ") ";
-	cout << '[' << node.value << ']' << endl;
+	//cout << ") ";
+	//cout << '[' << node.value << ']' << endl;
 	node.size = pos - start;
 	return node;
 }
