@@ -10,18 +10,9 @@
 #include <numeric>
 #include <unistd.h>
 #include <iterator>
+#include <list>
 
 using namespace std;
-
-int next_index(int index, int size)
-{
-	int index1 = (index+1)%size;
-	int index2 = (index+2)%size;
-	if (index1 < index2)
-		return index2;
-	//cout << index1 << ':' << index2 << ':' << size << endl;
-	return index1+1;
-}
 
 int main(int argc, char** argv)
 {
@@ -29,67 +20,44 @@ int main(int argc, char** argv)
 		cout << "Two inputs needed, num_players and points" << endl;
 		return -1;
 	}
-	bool debug = (argc >3);
 	int num_players = atoi(argv[1]);
 	int last_marble_point = atoi(argv[2]);
-	vector<int> marbles;
-	map<int,int> points;
-	int latest_point=0;
-	int next_marble = 0;
-	int index=0;
-	int current_player=0;
+	list<long> marbles = {};
+	vector<int64_t> points;
+	points.resize(num_players);
+
+	int current_player=-1;
 
 	marbles.push_back(0);
-	int v_size = (int) marbles.size();
-	vector<int>::iterator it;
-	while (next_marble < last_marble_point)
+	auto it = marbles.cbegin();
+	for (int current_marble=1; current_marble< last_marble_point+1; ++current_marble)
 	{
-		v_size = (int) marbles.size();
-		current_player = (current_player % num_players) + 1;
-		next_marble++;
+		current_player = (current_player+1)% num_players;
 
-		if ((next_marble%23)!=0)
+		if ((current_marble%23)!=0)
 		{
-			index = next_index(index,v_size);
-			it = marbles.begin();
-			advance(it, index);
-			marbles.insert(it,next_marble);
+			if (++it == marbles.cend())
+				it = marbles.cbegin();
+			it = marbles.insert(++it, current_marble);
 		} 
 		else 
 		{
-			index = (index + v_size - 7)%(v_size);
-			//cout << index << ':' << marbles.at(index) << '=' << v_size << endl;
-			latest_point = next_marble + marbles.at(index);
-			it = marbles.begin();
-			advance(it, index);
-			marbles.erase(it);
-			//cout << index << '/' << marbles.at(index) << endl;
-			if (points.find(current_player)==points.end())
+			for (int i=0; i<7; ++i)
 			{
-				points[current_player] = 0;
+				it--;
+				if (it == marbles.cbegin())
+					it = marbles.cend();
 			}
-			points[current_player] += latest_point;
+			points[current_player] += current_marble + *it;
+			marbles.erase(it++);
 		}
-
-		if (debug)
-		{
-			//cout << "Points: " << latest_point << endl;
-			cout << current_player << " (" << marbles.size() << ')' << ": ";
-			for (auto it=marbles.begin(); it!=marbles.end(); ++it)
-				cout << *it << " ";
-			cout << " [" << latest_point << "]" << endl;
-			//cout << num_players << ';' << last_marble_point << endl;
-		}
-
 	}
-	cout << "High Score" << endl;
-	int max = 0;
-	for (auto it=points.begin(); it != points.end(); ++it)
+	int64_t max = 0;
+	for (int i=0; i<num_players; i++)
 	{
-		cout << it->first << ' ' << it->second << endl;
-		if (it->second > max)
-			max = it->second;
+		if (points[i] > max)
+			max = points[i];
 	}
-	cout << "Task 1: " << max << endl;
+	cout << "Result: " << max << endl;
 	return 0;
 }
