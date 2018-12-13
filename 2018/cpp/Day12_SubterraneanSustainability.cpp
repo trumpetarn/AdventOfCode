@@ -38,9 +38,7 @@ int main(int argc, char** argv)
 		loc = argv[1];
 
 	vector<string> in = read_input(loc);
-	string initial = "....................";
-	initial += in[0].substr(15);
-	initial += "........................................";
+	string initial = in[0].substr(15);
 	map<string,char> change_map;
 	for (int i=2; i<(int)in.size(); i++)
 	{
@@ -49,11 +47,20 @@ int main(int argc, char** argv)
 	for (int gen=0; gen<20; gen++)
 	{
 		string next_gen = initial;
-		for (int i=2; i<(int)initial.size()-2; i++)
+		string temp = ".." + initial.substr(0,3);
+		next_gen[0] = change_map[temp];
+		temp = "." + initial.substr(0,4);
+		next_gen[1] = change_map[temp];
+		int len = (int)initial.size()-2;
+		for (int i=2; i<len; i++)
 		{
-			string temp = initial.substr(i-2,5);
+			temp = initial.substr(i-2,5);
 			next_gen[i] = change_map[temp];
 		}
+		temp = initial.substr(len-4,4) + ".";
+		next_gen[len-1] = change_map[temp];
+		temp = initial.substr(len-3,3) + "..";
+		next_gen[len] = change_map[temp];
 		initial = next_gen;
 		cout << initial << endl;
 	}
