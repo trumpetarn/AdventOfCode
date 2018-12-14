@@ -11,8 +11,17 @@
 #include <unistd.h>
 #include <iterator>
 #include <list>
+#include <cmath>
 
 using namespace std;
+
+int num_digits(int in)
+{
+	int length = 1;
+	while ( in /= 10 )
+   length++;
+ 	return length;
+}
 
 int main(int argc, char** argv)
 {
@@ -24,23 +33,11 @@ int main(int argc, char** argv)
 	int posB = 1;
 	recipes.push_back(3);
 	recipes.push_back(7);
-	for (int i=0; i<input+10; i++)
+	int lastDigits = 0;
+	int lastDigits2 = 0;
+	int numDigits = num_digits(input);
+	while ((lastDigits != input)&&(lastDigits2 != input))
 	{
-		/*
-		for (int j=0; j<(int)recipes.size(); j++)
-		{
-			if (j == posA && j == posB)
-				cout << "([" << recipes[j] << "])";
-			else if (j == posA)
-				cout << '(' << recipes[j] << ")";	
-			else if (j == posB)
-				cout << '[' << recipes[j] << "]";	
-			else
-				cout << recipes[j] << ' ';
-		}
-		cout << endl;
-		*/
-
 		//add recepies
 		int new_recipe = recipes[posA] + recipes[posB];
 		//cout << new_recipe << endl;
@@ -56,14 +53,34 @@ int main(int argc, char** argv)
 		int stepsA = recipes[posA]+1;
 		int stepsB = recipes[posB]+1;
 		//cout << "::::" << stepsA << ',' << stepsB << endl;
-		posA = ((posA + stepsA)%(int)recipes.size());
-		posB = ((posB + stepsB)%(int)recipes.size());
+		int size = (int)recipes.size();
+		posA = ((posA + stepsA)%size);
+		posB = ((posB + stepsB)%size);
 		//cout << "::::" << posA << ',' << posB << endl;
+		if (size>numDigits)
+		{
+			lastDigits = 0;
+			lastDigits2 = 0;
+			for (int i=0; i < numDigits; i++)
+			{
+				lastDigits += recipes[size-i-1]*pow(10,i);
+				lastDigits2 += recipes[size-i-2]*pow(10,i);
+			}
+			//cout << numDigits << ':' << lastDigits << endl;
+		}
 	}
-	for (int j=input; j<input+10; j++)
+	if ((int)recipes.size()>input+10)
 	{
-			cout << recipes[j];
+		cout << "Task 1: ";
+		for (int j=input; j<input+10; j++)
+		{
+				cout << recipes[j];
+		}
 	}
 	cout << endl;
+	if (lastDigits2 != input)
+		cout << "Task 2: " << recipes.size()-numDigits << endl;
+	else
+		cout << "Task 2: " << recipes.size()-numDigits-1 << endl;
 	return 0;
 }
