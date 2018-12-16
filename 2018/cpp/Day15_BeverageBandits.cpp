@@ -157,12 +157,7 @@ list<coord_t> BFS(char maze[MAX_SIZE][MAX_SIZE], coord_t start, coord_t end)
 	return p;
 }
 
-int main(int argc, char** argv)
-{
-	string loc = "../inputs/day15.txt";
-	if (argc >= 2)
-		loc = argv[1];
-	vector<string> in = read_input(loc);
+int combat_sim(vector<string> in, int elf_attack_power){
 	int y = (int)in.size();
 	int x = (int)in[0].size();
 	char cavern_map[MAX_SIZE][MAX_SIZE];
@@ -202,7 +197,7 @@ int main(int argc, char** argv)
 				e.pos.y = i;
 				e.race = elf;
 				e.health = 200;
-				e.attack_power = 3;
+				e.attack_power = elf_attack_power;
 				units.push_back(e);
 				next = 'E';
 			}
@@ -211,6 +206,7 @@ int main(int argc, char** argv)
 	}
 	int round = 0;
 	print_maze(cavern_map, x, y);
+	int start_num_elf = num_elfs;
 	while(num_elfs>0 && num_goblins>0)
 	{
 		round++;
@@ -299,7 +295,7 @@ int main(int argc, char** argv)
 									to_be_attacked = (*enemy);
 							}
 						}
-						cout << it->id << " attacks " << to_be_attacked->id << endl;
+						//cout << it->id << " attacks " << to_be_attacked->id << endl;
 						to_be_attacked->health -= it->attack_power;
 						if (to_be_attacked->health <= 0)
 							cavern_map[to_be_attacked->pos.y][to_be_attacked->pos.x] = '.';
@@ -310,11 +306,11 @@ int main(int argc, char** argv)
 		}
 		num_elfs = 0;
 		num_goblins = 0;
-		cout << "Round: " << round << endl;
+		//cout << "Round: " << round << endl;
 		//print_maze(cavern_map, x, y);
 		for (auto unit=units.begin(); unit!=units.end(); ++unit)
 		{
-			cout << unit->id <<" (" << unit->pos.x << ',' << unit->pos.y <<") :"<< unit->health<<endl;
+			//cout << unit->id <<" (" << unit->pos.x << ',' << unit->pos.y <<") :"<< unit->health<<endl;
 			if (unit->health>0)
 			{
 				if (unit->race == elf)
@@ -332,6 +328,23 @@ int main(int argc, char** argv)
 			health+= unit->health;
 		}
 	}
+	cout << "num_goblins" << num_goblins << endl;
+	cout << "num_elfs" << num_elfs << endl;
 	cout << "Outcome: " << health << '*' << round << '=' << health*round << endl;
+	return start_num_elf - num_elfs;
+}
+
+int main(int argc, char** argv)
+{
+	string loc = "../inputs/day15.txt";
+	if (argc >= 2)
+		loc = argv[1];
+	vector<string> in = read_input(loc);
+	int losses = combat_sim(in, 3);
+	int str = 3;
+	while (losses!=0)
+	{
+		losses = combat_sim(in, ++str);
+	}
 	return 0;
 }
