@@ -16,6 +16,8 @@ using namespace std;
 
 #define MAX_SIZE 100 
 
+bool debug = false;
+
 enum race_t
 {
 	goblin,
@@ -103,14 +105,6 @@ list<coord_t> BFS(char maze[MAX_SIZE][MAX_SIZE], coord_t start, coord_t end)
 		if (q.pos == end)
 		{
 			list<coord_t> path;
-			/*path_t *trace = q.prev;
-			while (trace != nullptr)
-			{
-				//path.push_back(trace->pos);
-				//cout << "D:" << trace->dist << endl;
-				trace = trace->prev;
-			}*/
-			//cout << q.dist << ':' << q.path.size() << endl;
 			return q.path;
 		}
 		if (visited[q.pos.y-1][q.pos.x] == '.')
@@ -174,7 +168,6 @@ int combat_sim(vector<string> in, int elf_attack_power){
 			if (next == 'G')
 			{
 				num_goblins++;
-				cavern_map[i][j] = '.';
 				//create goblin
 				unit_t g;//create goblin
 				g.id = id++;
@@ -189,7 +182,6 @@ int combat_sim(vector<string> in, int elf_attack_power){
 			else if (next == 'E')
 			{
 				num_elfs++;
-				cavern_map[i][j] = '.';
 				//create elf
 				unit_t e;//create goblin
 				e.id = id++;
@@ -234,32 +226,22 @@ int combat_sim(vector<string> in, int elf_attack_power){
 						//cout << it->id<< "->"<< it2->id << ": " <<temp.size()<<endl;
 						if (temp.size()>0 && (int)temp.size()<closest)
 						{
-							//cout << "SHORT" << endl;
 							shortest_it.clear();
 							closest = temp.size();
 							shortest = temp;
 							shortest_it.push_back(&(*it2));
-							//if (shortest.size()==1)
-								//break;
-							/*{
-								attacked=true;
-								it2->health -= it->attack_power;
-								if (it2->health <= 0)
-								{
-									cavern_map[it2->pos.y][it2->pos.x] = '.';
-								}
-								break;
-							}*/
 						}else if ((int)temp.size()==closest){
+							if ((*(--temp.end()))<(*(--shortest.end())))
+								shortest = temp;
 							shortest_it.push_back(&(*it2));
 						}
-						/*if (shortest.size()!=0)
+						if (shortest.size()!=0 && debug)
 						{
 							cout << it->pos.x << ':' << it->pos.y << endl;
 							for (auto it3=shortest.begin();it3!=shortest.end(); ++it3)
 								cout << it3->x << ',' << it3->y << endl;
 							cout << endl;
-						}*/
+						}
 						//find shortest way between M and E
 						//store 
 					}
@@ -295,7 +277,8 @@ int combat_sim(vector<string> in, int elf_attack_power){
 									to_be_attacked = (*enemy);
 							}
 						}
-						//cout << it->id << " attacks " << to_be_attacked->id << endl;
+						if (debug)
+							cout << it->id << " attacks " << to_be_attacked->id << endl;
 						to_be_attacked->health -= it->attack_power;
 						if (to_be_attacked->health <= 0)
 							cavern_map[to_be_attacked->pos.y][to_be_attacked->pos.x] = '.';
@@ -306,8 +289,11 @@ int combat_sim(vector<string> in, int elf_attack_power){
 		}
 		num_elfs = 0;
 		num_goblins = 0;
-		//cout << "Round: " << round << endl;
-		//print_maze(cavern_map, x, y);
+		if (debug)
+		{
+			cout << "Round: " << round << endl;
+			print_maze(cavern_map, x, y);
+		}
 		for (auto unit=units.begin(); unit!=units.end(); ++unit)
 		{
 			//cout << unit->id <<" (" << unit->pos.x << ',' << unit->pos.y <<") :"<< unit->health<<endl;
@@ -338,7 +324,11 @@ int main(int argc, char** argv)
 {
 	string loc = "../inputs/day15.txt";
 	if (argc >= 2)
+	{
 		loc = argv[1];
+		if (argc >2)
+			debug = true;
+	}
 	vector<string> in = read_input(loc);
 	int losses = combat_sim(in, 3);
 	int str = 3;
@@ -346,5 +336,6 @@ int main(int argc, char** argv)
 	{
 		losses = combat_sim(in, ++str);
 	}
+	cout << "Strength: " << str << endl;
 	return 0;
 }
