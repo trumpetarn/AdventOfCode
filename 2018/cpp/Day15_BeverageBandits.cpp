@@ -222,87 +222,96 @@ int main(int argc, char** argv)
 			list<coord_t> temp;
 			list<unit_t*> shortest_it;
 			int closest = MAX_SIZE*MAX_SIZE;
-			for (auto it2=units.begin(); it2!=units.end(); ++it2)
+			if (it->health>0)
 			{
-				// find all possible targets	
-				if (it->id != it2->id && it->race != it2->race && it2->health>0 && it->health>0)
+				for (auto it2=units.begin(); it2!=units.end(); ++it2)
 				{
-					cavern_map[it2->pos.y][it2->pos.x] = '.';
-					temp= BFS(cavern_map, it->pos, it2->pos);
-					if (it2->race == elf)
-						cavern_map[it2->pos.y][it2->pos.x] = 'E';
-					else
-						cavern_map[it2->pos.y][it2->pos.x] = 'G';
-					//cout << it->id<< "->"<< it2->id << ": " <<temp.size()<<endl;
-					if (temp.size()>0 && (int)temp.size()<closest)
+					// find all possible targets	
+					if (it->id != it2->id && it->race != it2->race && it2->health>0)
 					{
-						//cout << "SHORT" << endl;
-						shortest_it.clear();
-						closest = temp.size();
-						shortest = temp;
-						shortest_it.push_back(&(*it2));
-						//if (shortest.size()==1)
-							//break;
-						/*{
-							attacked=true;
-							it2->health -= it->attack_power;
-							if (it2->health <= 0)
-							{
-								cavern_map[it2->pos.y][it2->pos.x] = '.';
-							}
-							break;
+						cavern_map[it2->pos.y][it2->pos.x] = '.';
+						temp= BFS(cavern_map, it->pos, it2->pos);
+						if (it2->race == elf)
+							cavern_map[it2->pos.y][it2->pos.x] = 'E';
+						else
+							cavern_map[it2->pos.y][it2->pos.x] = 'G';
+						//cout << it->id<< "->"<< it2->id << ": " <<temp.size()<<endl;
+						if (temp.size()>0 && (int)temp.size()<closest)
+						{
+							//cout << "SHORT" << endl;
+							shortest_it.clear();
+							closest = temp.size();
+							shortest = temp;
+							shortest_it.push_back(&(*it2));
+							//if (shortest.size()==1)
+								//break;
+							/*{
+								attacked=true;
+								it2->health -= it->attack_power;
+								if (it2->health <= 0)
+								{
+									cavern_map[it2->pos.y][it2->pos.x] = '.';
+								}
+								break;
+							}*/
+						}else if ((int)temp.size()==closest){
+							shortest_it.push_back(&(*it2));
+						}
+						/*if (shortest.size()!=0)
+						{
+							cout << it->pos.x << ':' << it->pos.y << endl;
+							for (auto it3=shortest.begin();it3!=shortest.end(); ++it3)
+								cout << it3->x << ',' << it3->y << endl;
+							cout << endl;
 						}*/
-					}else if ((int)temp.size()==closest){
-						shortest_it.push_back(&(*it2));
+						//find shortest way between M and E
+						//store 
 					}
-					/*if (shortest.size()!=0)
-					{
-						cout << it->pos.x << ':' << it->pos.y << endl;
-						for (auto it3=shortest.begin();it3!=shortest.end(); ++it3)
-							cout << it3->x << ',' << it3->y << endl;
-						cout << endl;
-					}*/
-					//find shortest way between M and E
-					//store 
 				}
-			}
-			//move if not any target in range 
-			if (shortest.size()>0)
-			{
-				//cout << ":" << shortest.size() << endl;
-				shortest.pop_front(); //first is starting point
+				//move if not any target in range 
 				if (shortest.size()>0)
 				{
-					cavern_map[it->pos.y][it->pos.x] = '.';
-					coord_t pos = shortest.front();
-					it->pos = pos;
-					if (it->race == elf)
-						cavern_map[it->pos.y][it->pos.x] = 'E';
-					else
-						cavern_map[it->pos.y][it->pos.x] = 'G';
-					shortest.pop_front();
-				}
-			}
-			if (shortest.size()==0)
-			{
-				int lowest_health = 201;
-				unit_t *to_be_attacked;
-				for (auto enemy=shortest_it.begin(); enemy!=shortest_it.end(); ++enemy)
-				{
-					if ((*enemy)->health < lowest_health)
+					//cout << ":" << shortest.size() << endl;
+					shortest.pop_front(); //first is starting point
+					if (shortest.size()>0)
 					{
-						lowest_health = (*enemy)->health;
-						to_be_attacked = (*enemy);
+						cavern_map[it->pos.y][it->pos.x] = '.';
+						coord_t pos = shortest.front();
+						it->pos = pos;
+						if (it->race == elf)
+							cavern_map[it->pos.y][it->pos.x] = 'E';
+						else
+							cavern_map[it->pos.y][it->pos.x] = 'G';
+						shortest.pop_front();
 					}
-					to_be_attacked->health -= it->attack_power;
+					if (shortest.size()==0)
+					{
+						int lowest_health = 201;
+						unit_t *to_be_attacked;
+						for (auto enemy=shortest_it.begin(); enemy!=shortest_it.end(); ++enemy)
+						{
+							if ((*enemy)->health < lowest_health)
+							{
+								lowest_health = (*enemy)->health;
+								to_be_attacked = (*enemy);
+							}else if ((*enemy)->health == lowest_health){
+								if ((*enemy)->pos < to_be_attacked->pos)
+									to_be_attacked = (*enemy);
+							}
+						}
+						cout << it->id << " attacks " << to_be_attacked->id << endl;
+						to_be_attacked->health -= it->attack_power;
+						if (to_be_attacked->health <= 0)
+							cavern_map[to_be_attacked->pos.y][to_be_attacked->pos.x] = '.';
+					}
 				}
+				// if in range attack
 			}
-			// if in range attack
 		}
 		num_elfs = 0;
 		num_goblins = 0;
 		cout << "Round: " << round << endl;
-		print_maze(cavern_map, x, y);
+		//print_maze(cavern_map, x, y);
 		for (auto unit=units.begin(); unit!=units.end(); ++unit)
 		{
 			cout << unit->id <<" (" << unit->pos.x << ',' << unit->pos.y <<") :"<< unit->health<<endl;
@@ -323,6 +332,6 @@ int main(int argc, char** argv)
 			health+= unit->health;
 		}
 	}
-	cout << "Outcome: " << health*round << endl;
+	cout << "Outcome: " << health << '*' << round << '=' << health*round << endl;
 	return 0;
 }
