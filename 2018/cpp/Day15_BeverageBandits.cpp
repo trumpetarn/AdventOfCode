@@ -34,6 +34,12 @@ struct coord_t
 		else
 			return y < rhs.y;
 	}
+	bool operator >(const coord_t& rhs) const{
+		if (y == rhs.y)
+			return x > rhs.x;
+		else
+			return y > rhs.y;
+	}
 	bool operator ==(const coord_t& rhs) const{
 		return (x==rhs.x) && (y==rhs.y);
 	}
@@ -55,6 +61,9 @@ struct unit_t
 	int attack_power;
 	bool operator <(const unit_t& rhs) const{
 		return pos < rhs.pos;
+	}
+	bool operator >(const unit_t& rhs) const{
+		return pos > rhs.pos;
 	}
 };
 
@@ -90,65 +99,95 @@ vector<string> read_input(string loc)
 list<coord_t> BFS(char maze[MAX_SIZE][MAX_SIZE], coord_t start, coord_t end)
 {
 	list<path_t> queue;
-	char visited[MAX_SIZE][MAX_SIZE];
-	copy(&maze[0][0],&maze[0][0]+MAX_SIZE*MAX_SIZE,&visited[0][0]);
-	visited[start.y][start.x] = 'S';
+	list<coord_t> adj;
 	list<coord_t> p;
-	queue.push_back({start, p,0});
-
-	path_t q;
-
-	while (!queue.empty())
+	list<coord_t> shortest;
+	char visited[MAX_SIZE][MAX_SIZE];
+	if (start == coord_t{end.x, end.y-1} || start == coord_t{end.x-1, end.y}
+		|| start == coord_t{end.x+1, end.y} || start == coord_t{end.x, end.y+1})
 	{
-		q = queue.front();
-		queue.pop_front();
-		if (q.pos == end)
+		p.push_back(start);
+		return p;
+	}
+
+	if (maze[end.y-1][end.x] == '.')
+		adj.push_back({end.x, end.y-1});
+	if (maze[end.y][end.x-1] == '.')
+		adj.push_back({end.x-1, end.y});
+	if (maze[end.y][end.x+1] == '.')
+		adj.push_back({end.x+1, end.y});
+	if (maze[end.y+1][end.x] == '.')
+		adj.push_back({end.x, end.y+1});
+
+	//sort(adj.begin(),adj.end());
+	bool first = true;
+	for (auto it=adj.begin(); it!=adj.end(); ++it)
+	{
+		path_t q;
+		copy(&maze[0][0],&maze[0][0]+MAX_SIZE*MAX_SIZE,&visited[0][0]);
+		visited[start.y][start.x] = 'S';
+		queue.clear();
+		p.clear();
+		queue.push_back({start, p,0});
+		while (!queue.empty())
 		{
-			list<coord_t> path;
-			return q.path;
-		}
-		if (visited[q.pos.y-1][q.pos.x] == '.')
-		{
-			visited[q.pos.y-1][q.pos.x] = 'v';
-			path_t next = q;
-			next.path.push_back(q.pos);
-			next.pos.y = next.pos.y-1;
-			next.dist=next.dist+1;
-			queue.push_back(next);
-			//accessible.push_back({q.pos.x,q.pos.y-1});
-		}
-		if (visited[q.pos.y][q.pos.x-1] == '.')
-		{
-			visited[q.pos.y][q.pos.x-1] = 'v';
-			path_t next = q;
-			next.path.push_back(q.pos);
-			next.pos.x = next.pos.x-1;
-			next.dist=next.dist+1;
-			queue.push_back(next);
-			//accessible.push_back({q.pos.x-1,q.pos.y});
-		}
-		if (visited[q.pos.y][q.pos.x+1] == '.')
-		{
-			visited[q.pos.y][q.pos.x+1] = 'v';
-			path_t next = q;
-			next.path.push_back(q.pos);
-			next.pos.x = next.pos.x+1;
-			next.dist=next.dist+1;
-			queue.push_back(next);
-			//accessible.push_back({q.pos.x+1,q.pos.y});
-		}
-		if (visited[q.pos.y+1][q.pos.x] == '.')
-		{
-			visited[q.pos.y+1][q.pos.x] = 'v';
-			path_t next = q;
-			next.path.push_back(q.pos);
-			next.pos.y = next.pos.y+1;
-			next.dist=next.dist+1;
-			queue.push_back(next);
-			//accessible.push_back({q.x,q.y+1});
+			q = queue.front();
+			queue.pop_front();
+			if (q.pos == (*it))
+			{
+				q.path.push_back((*it));
+				if (first || q.path.size() < shortest.size())
+				{
+					if (debug && !first)
+						cout << shortest.size() << '>' << q.path.size() << endl;
+					first=false;
+					shortest = q.path;
+				}
+				break;
+			}
+			if (visited[q.pos.y-1][q.pos.x] == '.')
+			{
+				visited[q.pos.y-1][q.pos.x] = 'v';
+				path_t next = q;
+				next.path.push_back(q.pos);
+				next.pos.y = next.pos.y-1;
+				next.dist=next.dist+1;
+				queue.push_back(next);
+				//accessible.push_back({q.pos.x,q.pos.y-1});
+			}
+			if (visited[q.pos.y][q.pos.x-1] == '.')
+			{
+				visited[q.pos.y][q.pos.x-1] = 'v';
+				path_t next = q;
+				next.path.push_back(q.pos);
+				next.pos.x = next.pos.x-1;
+				next.dist=next.dist+1;
+				queue.push_back(next);
+				//accessible.push_back({q.pos.x-1,q.pos.y});
+			}
+			if (visited[q.pos.y][q.pos.x+1] == '.')
+			{
+				visited[q.pos.y][q.pos.x+1] = 'v';
+				path_t next = q;
+				next.path.push_back(q.pos);
+				next.pos.x = next.pos.x+1;
+				next.dist=next.dist+1;
+				queue.push_back(next);
+				//accessible.push_back({q.pos.x+1,q.pos.y});
+			}
+			if (visited[q.pos.y+1][q.pos.x] == '.')
+			{
+				visited[q.pos.y+1][q.pos.x] = 'v';
+				path_t next = q;
+				next.path.push_back(q.pos);
+				next.pos.y = next.pos.y+1;
+				next.dist=next.dist+1;
+				queue.push_back(next);
+				//accessible.push_back({q.x,q.y+1});
+			}
 		}
 	}
-	return p;
+	return shortest;
 }
 
 int combat_sim(vector<string> in, int elf_attack_power){
@@ -199,6 +238,7 @@ int combat_sim(vector<string> in, int elf_attack_power){
 	int round = 0;
 	print_maze(cavern_map, x, y);
 	int start_num_elf = num_elfs;
+	bool full_round = true;
 	while(num_elfs>0 && num_goblins>0)
 	{
 		round++;
@@ -281,7 +321,26 @@ int combat_sim(vector<string> in, int elf_attack_power){
 							cout << it->id << " attacks " << to_be_attacked->id << endl;
 						to_be_attacked->health -= it->attack_power;
 						if (to_be_attacked->health <= 0)
+						{
 							cavern_map[to_be_attacked->pos.y][to_be_attacked->pos.x] = '.';
+							int n1=0;
+							int n2=0;
+							for (auto unit=units.begin(); unit!=units.end(); ++unit)
+							{
+								if (unit->health>0)
+								{
+									if (unit->race == elf)
+										n1++;
+									else
+										n2++;
+								}
+							}
+							if (n1*n2==0)
+							{
+								full_round = ((++it)==units.end());
+								break;
+							}
+						}
 					}
 				}
 				// if in range attack
@@ -289,6 +348,7 @@ int combat_sim(vector<string> in, int elf_attack_power){
 		}
 		num_elfs = 0;
 		num_goblins = 0;
+		sort(units.begin(), units.end());
 		if (debug)
 		{
 			cout << "Round: " << round << endl;
@@ -296,7 +356,10 @@ int combat_sim(vector<string> in, int elf_attack_power){
 		}
 		for (auto unit=units.begin(); unit!=units.end(); ++unit)
 		{
-			//cout << unit->id <<" (" << unit->pos.x << ',' << unit->pos.y <<") :"<< unit->health<<endl;
+			if (debug)
+			{
+				cout << unit->id <<" (" << unit->pos.x << ',' << unit->pos.y <<") :"<< unit->health<<endl;
+			}
 			if (unit->health>0)
 			{
 				if (unit->race == elf)
@@ -306,6 +369,8 @@ int combat_sim(vector<string> in, int elf_attack_power){
 			}
 		}
 	}
+	if (!full_round)
+		round--;
 	int health =0;
 	for (auto unit=units.begin(); unit!=units.end(); ++unit)
 	{
@@ -314,9 +379,10 @@ int combat_sim(vector<string> in, int elf_attack_power){
 			health+= unit->health;
 		}
 	}
+	cout << "Attack Power: " << elf_attack_power << endl;
 	cout << "num_goblins" << num_goblins << endl;
 	cout << "num_elfs" << num_elfs << endl;
-	cout << "Outcome: " << health << '*' << round << '=' << health*round << endl;
+	cout << "Outcome: " << round << '*' << health << '=' << health*round << endl;
 	return start_num_elf - num_elfs;
 }
 
@@ -330,12 +396,11 @@ int main(int argc, char** argv)
 			debug = true;
 	}
 	vector<string> in = read_input(loc);
-	int losses = combat_sim(in, 3);
-	int str = 3;
-	while (losses!=0)
+	int losses = combat_sim(in, 19);
+	int str = 4;
+	//while (losses!=0)
 	{
-		losses = combat_sim(in, ++str);
+		//losses = combat_sim(in, ++str);
 	}
-	cout << "Strength: " << str << endl;
 	return 0;
 }
