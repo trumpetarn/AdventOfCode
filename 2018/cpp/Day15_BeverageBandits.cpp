@@ -119,7 +119,6 @@ list<coord_t> BFS(char maze[MAX_SIZE][MAX_SIZE], coord_t start, coord_t end)
 	if (maze[end.y+1][end.x] == '.')
 		adj.push_back({end.x, end.y+1});
 
-	//sort(adj.begin(),adj.end());
 	bool first = true;
 	for (auto it=adj.begin(); it!=adj.end(); ++it)
 	{
