@@ -13,7 +13,7 @@ def star2(file):
 	return file
 
 def main():
-	dayXXinput = open("../inputs/dayXX.txt", 'r')
+	dayXXinput = open("/repo/AdventOfCode/2019/inputs/day01.txt", 'r')
 	ans1 = star1(dayXXinput)
 	ans2 = star2(dayXXinput)
 	print("DayXX:")
