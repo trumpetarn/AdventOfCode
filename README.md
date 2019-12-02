@@ -1,3 +1,6 @@
 # AdventOfCode
 
-The code used by me to solve the challenges during Advent Of Code 2017
+My solutions to Advent Of Code
+2017: C and Python
+2018: C++ (Not finished)
+2019: C++ and Python (Ongoing)
