@@ -39,6 +39,5 @@ def main():
 	ans1 = star1(day01input)
 	day01input.seek(0)
 	ans2 = star2(day01input)
-	print("Day 1:")
 	print("Star 1:", ans1)
 	print("Star 2:", ans2)

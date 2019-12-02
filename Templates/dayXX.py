@@ -16,6 +16,5 @@ def main():
 	dayXXinput = open("/repo/AdventOfCode/2019/inputs/day01.txt", 'r')
 	ans1 = star1(dayXXinput)
 	ans2 = star2(dayXXinput)
-	print("DayXX:")
-	print("Task1\nXXX:", ans1)
-	print("Task2\nXXX:", ans2)
+	print("Star 1:", ans1)
+	print("Star 2:", ans2)

@@ -7,6 +7,8 @@ SRCS=$(wildcard *.cpp)
 FILTER_SRC=$(filter-out aoc.cpp, $(SRCS))
 OBJS=$(subst .cpp,.o,$(SRCS))
 FILTER_OBJS=$(subst .cpp,.o,$(FILTER_SRCS))
+DAY_SRC=$(wildcard day*.cpp)
+DAY=$(subst .cpp,,$(DAY_SRC))
 
 all: aoc
 
@@ -21,6 +23,9 @@ aoc.o: aoc.cpp aoc.h
 
 $(FILTER_OBJS): $(FILTER_SRC)
 	@ $(CXX) -c $< $(CPPFLAGS)
+
+$(DAY): all
+	@ ./aoc.out $(subst day,,$@)
 
 .PHONY: clean
 

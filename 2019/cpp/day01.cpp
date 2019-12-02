@@ -64,7 +64,6 @@ int main()
 {
 	string loc = "../inputs/day01.txt";
 	vector<string> in = read_input(loc);
-	printf("Day 1:\n");
 	task1(in);
 	task2(in);
 	return 0;
