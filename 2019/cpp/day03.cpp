@@ -21,11 +21,7 @@ struct point {
 	int y;
 };
 
-struct line
-{
-	point start;
-	point end;
-};
+typedef vector<point> line;
 
 enum Direction {
 	up,
@@ -33,7 +29,30 @@ enum Direction {
 	left,
 	right
 };
-
+bool operator==(const point& p1, const point& p2) {
+	return (p1.x==p2.x && p1.y == p2.y);
+}
+/*
+Direction get_direction(line l){
+	Direction d;
+	if (l.start.x==l.end.x){
+		// Move y
+		if (l.start.y>l.end.y){
+			d = down;
+		}else{
+			d = up;
+		}
+	}else{
+		// Move x
+		if (l.start.x>l.end.x){
+			d = left;
+		}else{
+			d = right;
+		}
+	}
+	return d;
+}
+*/
 point calc_endpoint(point start, Direction d, int len) {
 	point end = start;
 	switch (d) {
@@ -53,10 +72,31 @@ point calc_endpoint(point start, Direction d, int len) {
 	return end;
 }
 
+point next(point p, Direction d) {
+	switch (d){
+		case down:
+			p.y -= 1;
+			break;
+		case up:
+			p.y += 1;
+			break;
+		case left:
+			p.x -= 1;
+			break;
+		case right:
+			p.x += 1;
+			break;
+	}
+	return p;
+}
+
 line input2line(Direction d, int len, point start){
 	line l;
-	l.start = start;
-	l.end = calc_endpoint(start, d, len);
+	point p = start;
+	for (int i=0; i<len; ++i){
+		l.push_back(p);
+		p = next(p,d);
+	}
 	return l;
 }
 
@@ -78,31 +118,60 @@ vector<vector<line>> read_input(string loc)
 				if (c == ',') {
 					l = input2line(d, stoi(str), start);
 					cable.push_back(l);
-					start = l.end;
-					cout << str << ',';
+					start = l.back();
 					str = "";
 				}else if (c == 'R') {
-					cout << c;
+					//cout << c;
 					d = right;
 				} else if (c == 'U') {
-					cout << c;
+					//cout << c;
 					d = up;
 				} else if (c == 'L') {
-					cout << c;
+					//cout << c;
 					d = left;
 				} else if (c == 'D'){
-					cout << c;
+					//cout << c;
 					d = down;
 				}else{
 					str+=c;
 				}
 			}
 			l = input2line(d, stoi(str), start);
-			cout << str << endl;
 			in.push_back(cable);
 		}
 	}
 	return in;
+}
+
+point calc_intersection(line l, line m) {
+	for (point p1 : l) {
+		auto it = find(m.begin(), m.end(), p1);
+		if (it != m.end()) {
+			return *it;
+		}
+	}
+	return {0,0};
+}
+
+/*
+point calc_intersection2(line l, line m) {
+	point p1=l.start;
+	point p2=m.start;
+	Direction d1 = get_direction(l);
+	Direction d2 = get_direction(m);
+	point lend = next(l.end, d1);
+	point mend = next(m.end, d2);
+	while (!isEqual(p1,lend)) {
+		while (!isEqual(p2,mend)) {
+			if (isEqual(p1,p2) && !isEqual(p1, {0,0})){
+				cout << p1.x << p2.y << endl;
+				return p1;
+			}
+			p2 = next(p2,d2);
+		}
+		p1 = next(p1,d1);
+	}
+	return {0,0};
 }
 
 point calc_intersection(line l, line m) {
@@ -122,7 +191,7 @@ point calc_intersection(line l, line m) {
 			return p;
 		}
 	}else if (l.start.x == l.end.x && m.start.x == m.end.x && m.start.x==l.start.x) {
-		if (l.start.y <= m.start.y && l.end.y>=m.start.y) {
+		if (l.start.y <= m.start.y && l.end.y >= m.start.y) {
 			p.x = l.start.x;
 			p.y = m.start.y;
 			return p;
@@ -144,21 +213,18 @@ point calc_intersection(line l, line m) {
 	}
 	return p;
 }
-
-bool isEqual(point p1, point p2) {
-	return (p1.x==p2.x && p1.y == p2.y);
-}
-
+*/
 vector<point> calc_intersections(vector<line> l1, vector<line> l2) {
 	vector<point> ps;
 	int closeest = 9999999;
+	point origin = {0,0};
 	for (line l : l1) {
 		for (line m : l2) {
 			point p = calc_intersection(l,m);
-			if (!isEqual(p, {0,0})){
+			if (!(p == origin)){
 				ps.push_back(p);
 				int manhattan = abs(p.x) + abs(p.y);
-				cout << manhattan << ',';
+				cout << manhattan << endl;
 				if (manhattan < closeest) {
 					cout << closeest << endl;
 					closeest = manhattan;
@@ -175,7 +241,6 @@ int main()
 	string loc = "../inputs/day03.txt";
 
 	vector<vector<line>> in = read_input(loc);
-	cout << in.size() << endl;
 	calc_intersections(in[0], in[1]);
 	return 0;
 }
