@@ -13,7 +13,7 @@
 #include <list>
 
 using namespace std;
-
+namespace day03{
 vector<string> read_input(string loc)
 {
 	vector<string> in;
@@ -29,7 +29,7 @@ vector<string> read_input(string loc)
 	return in;
 }
 
-int main(int argc, char** argv)
+int main()
 {
 	string loc = "../inputs/dayXX.txt";
 	if (argc >= 2)
@@ -37,4 +37,5 @@ int main(int argc, char** argv)
 
 	vector<string> in = read_input(loc);
 	return 0;
+}
 }

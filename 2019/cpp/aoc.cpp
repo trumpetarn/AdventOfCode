@@ -21,6 +21,9 @@ void run_day(int n) {
 		case 2:
 			time_it(day02::main);
 			break;
+		case 3:
+			time_it(day03::main);
+			break;
 		default:
 			break;
 	}
