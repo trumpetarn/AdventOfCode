@@ -9,7 +9,11 @@ void time_it(void(*f)()){
 	(*f)();
 	auto end = chrono::high_resolution_clock::now(); 
 	auto duration = chrono::duration_cast<chrono::microseconds>(end-start); 
-	cout << "Execution time: " << duration.count() << " \u03BCs" << endl << endl; 
+	if (duration > chrono::milliseconds(10)){
+		cout << "Execution time: " << chrono::duration_cast<chrono::milliseconds>(duration).count() << " ms" << endl << endl; 
+	}else{
+		cout << "Execution time: " << duration.count() << " \u03BCs" << endl << endl; 
+	}
 }
 
 void run_day(int n) {
