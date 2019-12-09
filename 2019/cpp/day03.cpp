@@ -26,6 +26,11 @@ bool operator==(const point& p1, const point& p2) {
 bool operator!=(const point& p1, const point& p2) {
 	return !(p1==p2);
 }
+bool operator<(const point& p1, const point& p2) {
+	pair<int,int> pair1(p1.x, p1.y);
+	pair<int,int> pair2(p2.x, p2.y);
+	return pair1 < pair2;
+}
 point operator+(const point& p1, const point& p2) {
 	point p3 = {p1.x+p2.x, p1.y+p2.y};
 	return p3;
@@ -34,229 +39,109 @@ point operator-(const point& p1, const point& p2) {
 	point p3 = {p1.x-p2.x, p1.y-p2.y};
 	return p3;
 }
-
-typedef vector<point> line;
-
-enum Direction {
-	up,
-	down,
-	left,
-	right
-};
-
-point calc_endpoint(point start, Direction d, int len) {
-	point end = start;
-	switch (d) {
-		case up:
-			end.y += len;
-			break;
-		case down:
-			end.y -= len;
-			break;
-		case left:
-			end.x -= len;
-			break;
-		case right:
-			end.x += len;
-			break;
-	}
-	return end;
+point operator*(const int& c, const point& p2){
+	return {c*p2.x, c*p2.y};
+}
+std::ostream &operator<<(std::ostream &os, const point& p) { 
+    return os << p.x << ',' << p.y;
 }
 
-point next(point p, Direction d) {
-	switch (d){
-		case down:
-			p.y -= 1;
-			break;
-		case up:
-			p.y += 1;
-			break;
-		case left:
-			p.x -= 1;
-			break;
-		case right:
-			p.x += 1;
-			break;
-	}
-	return p;
-}
-
-line input2line(Direction d, int len, point start){
-	line l;
-	point p = start;
-	for (int i=0; i<len+1; ++i){
-		l.push_back(p);
-		p = next(p,d);
-	}
-	return l;
-}
-
-vector<vector<line>> read_input(string loc)
+vector<vector<point>> read_input(string loc)
 {
-	vector<vector<line>> in;
-	string ln;
+	vector<vector<point>> in;
 	ifstream infile (loc);
+	string ln, str;
+	str = "";
+	point origin = {0,0};
 	if (infile.is_open())
 	{
 		while (getline(infile,ln))
 		{	
-			vector<line> cable;
-			point start = {0,0};
-			line l;
-			string str = "";
-			Direction d = up;
+			point dir;
+			vector<point> lv;
+			lv.push_back(origin);
 			for (char c : ln) {
 				if (c == ',') {
-					// cout<< str << ',';
-					l = input2line(d, stoi(str), start);
-					cable.push_back(l);
-					start = l.back();
+					point last = lv.back();
+					for (int i=0; i<stoi(str); i++){
+						point p = (i+1)*dir + last;
+						lv.push_back(p);
+					}
 					str = "";
 				}else if (c == 'R') {
-					// cout<< c;
-					d = right;
+					dir = {1,0};
 				} else if (c == 'U') {
-					// cout<< c;
-					d = up;
+					dir = {0,1};
 				} else if (c == 'L') {
-					// cout<< c;
-					d = left;
+					dir = {-1,0};
 				} else if (c == 'D'){
-					// cout<< c;
-					d = down;
+					dir = {0,-1};
 				}else{
 					str+=c;
 				}
 			}
-			// cout<< str << endl;
-			l = input2line(d, stoi(str), start);
-			in.push_back(cable);
+			point last = lv.back();
+			for (int i=0; i<stoi(str); i++){
+				point p = (i+1)*dir + last;
+				lv.push_back(p);
+			}
+			str = "";
+			in.push_back(lv);
 		}
 	}
 	return in;
 }
 
-bool is_orthogonal(line l1, line l2){
-	point p = (l1[1]-l1[0]) + (l2[1]-l2[0]);
-	return (abs(p.x)==1 && abs(p.y)==1);
-}
-
-point calc_intersection(line l1, line l2) {
-	if (is_orthogonal(l1, l2) || l1[0].x == l2[0].x || l1[0].y == l2[0].y){
-		for (point p1 : l1) {
-			for (point p2 : l2) {
-				if (p1 == p2){
-					return p1;
-				}
-			}
-		}
-	}
-	return {0,0};
-}
-
-vector<point> calc_intersections(vector<line> l1, vector<line> l2) {
-	vector<point> ps;
+void task1(vector<point> inter){
+	int min = 9999999;
+	int manhattan;
 	point origin = {0,0};
-	for (line l : l1) {
-		for (line m : l2) {
-			point p = calc_intersection(l,m);
-			if (!(p == origin)){
+	for (point& p : inter){
+		if (p != origin){
+			//cout << p.x << ',' << p.y << "::";
+			manhattan = abs(p.x) + abs(p.y);
+			if (manhattan < min){
+				min = manhattan;
+			}
+			//cout << manhattan << endl;
+		}
+	}
+	cout << "Star 1: " << min << endl;
+}
 
-				ps.push_back(p);
+void task2(vector<point> inter, vector<point> c1, vector<point> c2){
+	int min = 9999999;
+	int len;
+	point origin = {0,0};
+	for (point& p : inter){
+		if (p != origin){
+			auto l1 = find(c1.begin(),c1.end(),p);
+			auto l2 = find(c2.begin(),c2.end(),p);
+			len = distance(c1.begin(), l1) + distance(c2.begin(), l2);
+			if (len < min){
+				min = len;
 			}
 		}
 	}
-	return ps;
-}
-
-void task1(vector<point> pv){
-	int closeest = 9999999;
-	for (point p : pv){
-		int manhattan = abs(p.x) + abs(p.y);
-		// cout<< "M:" << manhattan << endl;
-		if (manhattan < closeest) {
-			// cout<< "C:" << closeest << endl;
-			closeest = manhattan;
-		}
-	}
-	cout << "Star 1:" << closeest << endl;
-}
-
-int calc_task2_len(line cab, point intersec){
-	vector<point> visited1;
-	vector<point> visited2;
-	bool reached = false;
-
-	for (point p : cab){
-		if (!reached){
-			auto pos = find(visited1.begin(),visited1.end(),p);
-			if (pos!=visited1.end()){
-				visited1.erase(pos, visited1.end());
-			}
-			visited1.push_back(p);
-		}else{
-			visited2.push_back(p);
-			auto pos = find(visited1.begin(),visited1.end(),p);
-			if (pos!=visited1.end()){
-				if ((int)visited2.size() < distance(pos,visited1.end())){
-					/*cout << pos->x << ',' << pos->y << endl;
-					cout << distance(pos,visited1.end()) << ':' << (int)visited2.size() << endl;
-					cout << (int)visited1.size() << endl;
-					*/
-					reverse(visited2.begin(),visited2.end());
-					visited1.erase(pos, visited1.end());
-					visited1.insert(visited1.end(),visited2.begin(),visited2.end());
-
-					//cout << (int)visited1.size() << endl;
-				}
-			}
-		}
-		if (p == intersec){
-			reached = true;
-			visited2.push_back(p);
-		}
-	}
-	return (int)visited1.size()-1; // Skip start point
-}
-
-void task2(vector<point> pv, vector<line> cable1, vector<line> cable2){
-	int closeest = 9999999;
-	vector<point> c1 = {{0,0}};
-	vector<point> c2 = {{0,0}};
-	for (line l1 : cable1){
-		c1.insert(c1.end(), l1.begin()+1, l1.end());
-	}
-	for (line l2 : cable2){
-		c2.insert(c2.end(), l2.begin()+1, l2.end());
-	}
-	for (point inter : pv){
-		int c1_len = calc_task2_len(c1, inter);
-		int c2_len = calc_task2_len(c2, inter);
-		
-		int len = c1_len+c2_len;
-		if (len<closeest){
-			closeest = len;
-		}
-	}
-	cout << "Star 2:" << closeest << endl;
+	cout << "Star 2: " << min << endl;
 }
 
 int main()
 {
-	bool debug = false;
 	string loc = "../inputs/day03.txt";
-	if (debug){
-		loc = "../inputs/day03_debug.txt";
-	}
-	vector<vector<line>> in = read_input(loc);
-	vector<point> pv = calc_intersections(in[0], in[1]);
-	task1(pv);
-	task2(pv,in[0],in[1]);
-	if (debug) {
-		pv = calc_intersections(in[2], in[3]);
-		task1(pv);
-		task2(pv,in[2],in[3]);
-	}
+	vector<vector<point>> in = read_input(loc);
+	vector<point> c1 = in[0];
+	vector<point> c2 = in[1];
+	vector<point> c1_ordered = in[0];
+	vector<point> c2_ordered = in[1];
+	sort(c1.begin(),c1.end());
+	sort(c2.begin(),c2.end());
+
+	vector<point> intersections;
+	set_intersection(c1.begin(),c1.end(),c2.begin(),c2.end(),back_inserter(intersections));
+
+	task1(intersections);
+	task2(intersections,c1_ordered,c2_ordered);
 	return 0;
 }
 }
