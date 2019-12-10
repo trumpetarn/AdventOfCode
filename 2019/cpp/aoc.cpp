@@ -34,6 +34,66 @@ void run_day(int n) {
 		case 5:
 			time_it(day05::main);
 			break;
+		case 6:
+			time_it(day06::main);
+			break;
+		case 7:
+			time_it(day07::main);
+			break;
+		case 8:
+			time_it(day08::main);
+			break;
+		case 9:
+			time_it(day09::main);
+			break;
+		case 10:
+			time_it(day10::main);
+			break;/*
+		case 11:
+			time_it(day11::main);
+			break;
+		case 12:
+			time_it(day12::main);
+			break;
+		case 13:
+			time_it(day13::main);
+			break;
+		case 14:
+			time_it(day14::main);
+			break;
+		case 15:
+			time_it(day15::main);
+			break;
+		case 16:
+			time_it(day16::main);
+			break;
+		case 17:
+			time_it(day17::main);
+			break;
+		case 18:
+			time_it(day18::main);
+			break;
+		case 19:
+			time_it(day19::main);
+			break;
+		case 20:
+			time_it(day20::main);
+			break;
+		case 21:
+			time_it(day21::main);
+			break;
+		case 22:
+			time_it(day22::main);
+			break;
+		case 23:
+			time_it(day23::main);
+			break;
+		case 24:
+			time_it(day24::main);
+			break;
+		case 25:
+			time_it(day25::main);
+			break;*/
 		default:
 			break;
 	}
