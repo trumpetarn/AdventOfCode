@@ -18,15 +18,13 @@ using namespace std;
 namespace day05{
 
 void task1(vector<int> input){
-	int res = 0;
-	res = intcode::run(input);
-	cout << "Star 1: " << res << endl;
+	cout << "Star 1: ";
+	intcode::run(input);
 }
 
 void task2(vector<int> input){
-	int res = 0;
-	res = intcode::run(input, 5);
-	cout << "Star 2: " << res << endl;
+	cout << "Star 2: ";
+	intcode::run(input, 5);
 }
 
 int main()

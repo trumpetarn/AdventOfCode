@@ -29,9 +29,10 @@ int get_param(vector<int> n, int pos, int opcode) {
 	return p;
 }
 
-int run(vector<int> n, vector<int> inputs){
+int run(vector<int> n, vector<int> inputs, int &output){
 	int p1,p2;
 	int input_it = 0;
+	int input_size = (int) inputs.size();
 	for (uint pos = 0;pos<n.size();){
 		int opcode = n[pos];
 		int A = (opcode/10000)%10;
@@ -56,12 +57,19 @@ int run(vector<int> n, vector<int> inputs){
 				pos += 4;
 				break;
 			case 3: //Write
-				cout << "write: (" << inputs[input_it] << ") ";
+				//cout << "write: (" << inputs[input_it] << ") ";
+				// TODO: We have to wait until we get the next input
+				if (input_it>=input_size){
+					return pos;
+				}
 				n[n[pos+1]] = inputs[input_it++];
 				pos += 2;
 				break;
 			case 4: //Print
 				p1 = get_param(n, pos+1, C);
+				if (p1!=0){
+					output = p1;
+				}
 				pos += 2;
 				break;
 			case 5: //jump if true
@@ -95,7 +103,7 @@ int run(vector<int> n, vector<int> inputs){
 				pos += 4;
 				break;
 			case 99:
-				cout << "Returns " << n[0] << endl;
+				//cout << "Returns " << n[0] << endl;
 				return n[0];
 			default:
 				cout << "ERROR!" << endl;
@@ -103,6 +111,12 @@ int run(vector<int> n, vector<int> inputs){
 		}
 	}
 	return -1;
+}
+int run(std::vector<int> n, std::vector<int> inputs){
+	int out, ret;
+	ret = run(n,inputs, out);
+	cout << out << endl;
+	return ret;
 }
 
 int run(vector<int> n, int input){
