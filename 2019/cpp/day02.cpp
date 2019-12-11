@@ -12,39 +12,15 @@
 #include <iterator>
 #include <list>
 #include <math.h>
+#include "intcode.h"
 
 using namespace std;
 namespace day02{
-int intcode(vector<int> n){
-	int p1,p2,res;
-	for (uint pos = 0;pos<n.size();pos += 4){
-		//cout << pos << " ";
-		switch(n[pos]){
-			case 1:
-				p1 = n[pos+1];
-				p2 = n[pos+2];
-				res = n[pos+3];
-				n[res] = n[p1] + n[p2];
-				break;
-			case 2:
-				p1 = n[pos+1];
-				p2 = n[pos+2];
-				res = n[pos+3];
-				n[res] = n[p1] * n[p2];
-				break;
-			case 99:
-				return n[0];
-			default:
-				cout << "ERROR!" << endl;
-		}
-	}
-	return -1;
-}
 
 void task1(vector<int> input){
 	input[1] = 12;
 	input[2] = 2;
-	int res = intcode(input);
+	int res = intcode::run(input);
 	cout << "Star 1: " << res << endl;
 }
 
@@ -54,7 +30,7 @@ void task2(vector<int> input){
 		for (int verb=1; verb < noun; verb++) {
 			input[1] = noun;
 			input[2] = verb;
-			res = intcode(input);
+			res = intcode::run(input);
 			if (res == 19690720){
 				cout << "Star 2: " << 100*noun+verb << endl;
 				return;

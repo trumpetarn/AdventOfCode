@@ -17,7 +17,7 @@ void time_it(void(*f)()){
 }
 
 void run_day(int n) {
-	//cout << "--- Day " << n << " ---" << endl;
+	cout << "--- Day " << n << " ---" << endl;
 	switch (n) {
 		case 1:
 			time_it(day01::main);

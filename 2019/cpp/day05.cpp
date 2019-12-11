@@ -12,104 +12,20 @@
 #include <iterator>
 #include <list>
 #include <math.h>
+#include "intcode.h"
 
 using namespace std;
 namespace day05{
-/*
-ABCDE
- 1002
-
-DE - two-digit opcode,      02 == opcode 2
- C - mode of 1st parameter,  0 == position mode
- B - mode of 2nd parameter,  1 == immediate mode
- A - mode of 3rd parameter,  0 == position mode,
-                                  omitted due to being a leading zero
-                                  */
-
-
-int intcode(vector<int> n, int input = 1){
-	int p1,p2;
-	for (uint pos = 0;pos<n.size();){
-		int opcode = n[pos];
-		int A = (opcode/10000)%10;
-		int B = (opcode/1000)%10;
-		int C = (opcode/100)%10;
-		int DE = (opcode)%100;
-		//cout << A << B << C << ',' << DE << " " << opcode << endl;
-		if (A==1){
-			cout << 1;
-		}
-		switch(DE){
-			case 1: //Add
-				p1 = (C==1) ? n[pos+1] : n[n[pos+1]];
-				p2 = (B==1) ? n[pos+2] : n[n[pos+2]];
-				n[n[pos+3]] = p1 + p2;
-				pos += 4;
-				break;
-			case 2: //Multiply
-				p1 = (C==1) ? n[pos+1] : n[n[pos+1]];
-				p2 = (B==1) ? n[pos+2] : n[n[pos+2]];
-				n[n[pos+3]] = p1 * p2;
-				pos += 4;
-				break;
-			case 3: //Write
-				n[n[pos+1]] = input;
-				pos += 2;
-				break;
-			case 4: //Print
-				p1 = (C==1) ? n[pos+1] : n[n[pos+1]];
-				cout << p1 << endl;
-				pos += 2;
-				break;
-			case 5: //jump if true
-				p1 = (C==1) ? n[pos+1] : n[n[pos+1]];
-				p2 = (B==1) ? n[pos+2] : n[n[pos+2]];
-				if (p1 != 0){
-					pos = p2;
-				}else{
-					pos += 3;
-				}
-				break;
-			case 6: //jump is false
-				p1 = (C==1) ? n[pos+1] : n[n[pos+1]];
-				p2 = (B==1) ? n[pos+2] : n[n[pos+2]];
-				if (p1 == 0){
-					pos = p2;
-				}else{
-					pos += 3;
-				}
-				break;
-			case 7: //less than
-				p1 = (C==1) ? n[pos+1] : n[n[pos+1]];
-				p2 = (B==1) ? n[pos+2] : n[n[pos+2]];
-				n[n[pos+3]] = (p1 < p2) ? 1 : 0;
-				pos += 4;
-				break;
-			case 8: //Equals
-				p1 = (C==1) ? n[pos+1] : n[n[pos+1]];
-				p2 = (B==1) ? n[pos+2] : n[n[pos+2]];
-				n[n[pos+3]] = (p1 == p2) ? 1 : 0;
-				pos += 4;
-				break;
-			case 99:
-				return n[0];
-			default:
-				cout << "ERROR!" << endl;
-				return -1;
-		}
-	}
-	return -1;
-}
 
 void task1(vector<int> input){
 	int res = 0;
-	res = intcode(input);
+	res = intcode::run(input);
 	cout << "Star 1: " << res << endl;
 }
 
 void task2(vector<int> input){
 	int res = 0;
-	res = intcode(input, 5);
+	res = intcode::run(input, 5);
 	cout << "Star 2: " << res << endl;
 }
 
