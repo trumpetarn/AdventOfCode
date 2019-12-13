@@ -2,7 +2,6 @@
 #include <iostream>
 
 using namespace std;
-namespace intcode{
 /*
 ABCDE
  1002
@@ -14,14 +13,14 @@ DE - two-digit opcode,      02 == opcode 2
                                   omitted due to being a leading zero
                                   */
 
-int get_param(vector<int> n, int pos, int opcode) {
+int Intcode::get_param(int pos, int opcode) {
 	int p=-1;
 	switch(opcode){
 		case 0:
-			p= n[n[pos]];
+			p= program[program[pos]];
 			break;
 		case 1:
-			p=n[pos];
+			p=program[pos];
 			break;
 		default:
 			cout << "ERROR: Invalid opcode";
@@ -29,99 +28,162 @@ int get_param(vector<int> n, int pos, int opcode) {
 	return p;
 }
 
-int run(vector<int> n, vector<int> inputs, int &output){
-	int p1,p2;
-	int input_it = 0;
-	int input_size = (int) inputs.size();
-	for (uint pos = 0;pos<n.size();){
-		int opcode = n[pos];
-		int A = (opcode/10000)%10;
-		int B = (opcode/1000)%10;
-		int C = (opcode/100)%10;
-		int DE = (opcode)%100;
-		//cout << A << B << C << ',' << DE << " " << opcode << endl;
-		if (A!=0){
-			cout << "A != 0";
-		}
-		switch(DE){
-			case 1: //Add
-				p1 = get_param(n, pos+1, C);
-				p2 = get_param(n, pos+2, B);
-				n[n[pos+3]] = p1 + p2;
-				pos += 4;
-				break;
-			case 2: //Multiply
-				p1 = get_param(n, pos+1, C);
-				p2 = get_param(n, pos+2, B);
-				n[n[pos+3]] = p1 * p2;
-				pos += 4;
-				break;
-			case 3: //Write
-				//cout << "write: (" << inputs[input_it] << ") ";
-				// TODO: We have to wait until we get the next input
-				if (input_it>=input_size){
-					return pos;
-				}
-				n[n[pos+1]] = inputs[input_it++];
-				pos += 2;
-				break;
-			case 4: //Print
-				p1 = get_param(n, pos+1, C);
-				if (p1!=0){
-					output = p1;
-				}
-				pos += 2;
-				break;
-			case 5: //jump if true
-				p1 = get_param(n, pos+1, C);
-				p2 = get_param(n, pos+2, B);
-				if (p1 != 0){
-					pos = p2;
-				}else{
-					pos += 3;
-				}
-				break;
-			case 6: //jump is false
-				p1 = get_param(n, pos+1, C);
-				p2 = get_param(n, pos+2, B);
-				if (p1 == 0){
-					pos = p2;
-				}else{
-					pos += 3;
-				}
-				break;
-			case 7: //less than
-				p1 = get_param(n, pos+1, C);
-				p2 = get_param(n, pos+2, B);
-				n[n[pos+3]] = (p1 < p2) ? 1 : 0;
-				pos += 4;
-				break;
-			case 8: //Equals
-				p1 = get_param(n, pos+1, C);
-				p2 = get_param(n, pos+2, B);
-				n[n[pos+3]] = (p1 == p2) ? 1 : 0;
-				pos += 4;
-				break;
-			case 99:
-				//cout << "Returns " << n[0] << endl;
-				return n[0];
-			default:
-				cout << "ERROR!" << endl;
-				return -1;
-		}
-	}
-	return -1;
+bool Intcode::get_input(int &in){
+	in = provided_input;
+	return input_set;
 }
-int run(std::vector<int> n, std::vector<int> inputs){
-	int out, ret;
-	ret = run(n,inputs, out);
-	cout << out << endl;
+
+int Intcode::tick(){
+	int p1,p2,val;
+	int opcode = program[program_pos];
+	int A = (opcode/10000)%10;
+	int B = (opcode/1000)%10;
+	int C = (opcode/100)%10;
+	int DE = (opcode)%100;
+	//cout << A << B << C << ',' << DE << " " << opcode << endl;
+	if (A!=0){
+		cout << "A != 0";
+		return -1;
+	}
+	switch(DE){
+		case 1: //Add
+			p1 = get_param(program_pos+1, C);
+			p2 = get_param(program_pos+2, B);
+			program[program[program_pos+3]] = p1 + p2;
+			program_pos += 4;
+			break;
+		case 2: //Multiply
+			p1 = get_param(program_pos+1, C);
+			p2 = get_param(program_pos+2, B);
+			program[program[program_pos+3]] = p1 * p2;
+			program_pos += 4;
+			break;
+		case 3: //Write
+			val = 0;
+			if (break_next_input){
+				break_next_input = false; 
+				return 0;
+			}else if (get_input(val) ){
+				program[program[program_pos+1]] = val;
+				program_pos += 2;
+			}else{
+				cout << "NO INPUT AVAILABLE" << endl;
+				return -1;
+			}
+			break;
+		case 4: //Print
+			p1 = get_param(program_pos+1, C);
+			if (p1!=0){
+				last_output = p1;
+			}
+			program_pos += 2;
+			if (break_next_output){
+				break_next_output = false; 
+				return 0;
+			}
+			break;
+		case 5: //jump if true
+			p1 = get_param(program_pos+1, C);
+			p2 = get_param(program_pos+2, B);
+			if (p1 != 0){
+				program_pos = p2;
+			}else{
+				program_pos += 3;
+			}
+			break;
+		case 6: //jump is false
+			p1 = get_param(program_pos+1, C);
+			p2 = get_param(program_pos+2, B);
+			if (p1 == 0){
+				program_pos = p2;
+			}else{
+				program_pos += 3;
+			}
+			break;
+		case 7: //less than
+			p1 = get_param(program_pos+1, C);
+			p2 = get_param(program_pos+2, B);
+			program[program[program_pos+3]] = (p1 < p2) ? 1 : 0;
+			program_pos += 4;
+			break;
+		case 8: //Equals
+			p1 = get_param(program_pos+1, C);
+			p2 = get_param(program_pos+2, B);
+			program[program[program_pos+3]] = (p1 == p2) ? 1 : 0;
+			program_pos += 4;
+			break;
+		case 99:
+			//cout << "Returns " << program[0] << endl;
+			return program[0];
+		default:
+			cout << "ERROR!" << endl;
+			return -3;
+	}
+	return 0;
+}
+
+bool Intcode::run2input(){
+	break_next_input = true;
+	int ret=0;
+	while (break_next_input && ret==0){
+		ret = tick();
+	}
+	return ret==0; //true means the program have not halted
+}
+
+bool Intcode::run2output(){
+	break_next_output = true;
+	int ret=0;
+	while (break_next_output && ret==0){
+		ret = tick();
+	}
+	return ret==0; //true means the program have not halted
+}
+
+int Intcode::run2input_output(){
+	break_next_input = true;
+	break_next_output = true;
+	int res=0;
+	while (break_next_input && break_next_output && res==0){
+		res = tick();
+	}
+	int ret = 0;
+	if (!break_next_output){
+		ret = 1;
+	}
+	if (!break_next_input){
+		ret = 2;
+	}
+
+	break_next_input = false;
+	break_next_output = false;
+	return ret; //0 = halted
+}
+
+void Intcode::provide_input(int in){
+	set_input(in);
+	tick();
+}
+
+int Intcode::run(int input){
+	set_input(input);
+	int ret = 0;
+	while (ret == 0){
+		ret = tick();
+	}
 	return ret;
 }
 
-int run(vector<int> n, int input){
-	vector<int> v = {input};
-	return run(n,v);
+void Intcode::set_program(std::vector<int> n){
+	program = n;
 }
 
+void Intcode::set_input(int in){
+	input_set = true;
+	provided_input = in;
+}
+
+void Intcode::reset_program(){
+	program_pos = 0;
+	input_set = false;
 }

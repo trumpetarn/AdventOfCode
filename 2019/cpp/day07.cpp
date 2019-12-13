@@ -14,6 +14,8 @@
 #include <math.h>
 #include "intcode.h"
 
+#define NUM_AMPLIFIERS 5
+
 using namespace std;
 namespace day07{
 void print_vector(vector<int> v, char delim){
@@ -38,29 +40,36 @@ vector<int> read_input(string loc)
 	return in;
 }
 
-int amplifiers(vector<int> instr, vector<int> phase){
-	int input=0;
-	int out;
-	for (int i=0; i<5; i++){
-		//cout << input << ':';
-		intcode::run(instr, {phase[i], input}, out);
-		input = out;
+int amplifiers(vector<int> instr, vector<int> phase, int input){
+	Intcode intcode[NUM_AMPLIFIERS];
+	for (int i=0; i<NUM_AMPLIFIERS; i++){
+		intcode[i].set_program(instr);
+		// Provide phase
+		intcode[i].provide_input(phase[i]);
+		intcode[i].run(input);
+		input = intcode[i].get_last_output();
 	}
-	//cout << input << endl;
 	return input;
 }
 
-int amplifiers2(vector<int> instr, int &input){
-	int out, ret;
-	for (int i=0; i<5; i++){
-		cout << input << ':';
-		//ret = intcode::run(instr, {input}, out);
-		input = out;
-		if (ret==0)
-			break;
+int amplifier_loop(vector<int> instr, vector<int> phase){
+	Intcode intcode[NUM_AMPLIFIERS];
+	// Insert phase
+	for (int i=0; i<NUM_AMPLIFIERS; i++){
+		intcode[i].set_program(instr);
+		// Provide phase
+		intcode[i].provide_input(phase[i]);
 	}
-	cout << input << endl;
-	return ret;
+	bool has_halted = false;
+	int input = 0;
+	while (!has_halted){
+		for (int i=0; i<NUM_AMPLIFIERS; i++){
+			intcode[i].provide_input(input);
+			has_halted = !intcode[i].run2output();
+			input = intcode[i].get_last_output();
+		}
+	}
+	return input;
 }
 
 void task1(vector<int> instr){
@@ -69,7 +78,7 @@ void task1(vector<int> instr){
 	vector<int> perm;
 	do{
 		//print_vector(phases,' ');
-		n = amplifiers(instr, phases);
+		n = amplifiers(instr, phases, 0);
 		if (n>max){
 			perm=phases;
 			max = n;
@@ -84,8 +93,7 @@ void task2(vector<int> instr){
 	int n,max = 0;
 	vector<int> perm;
 	do{
-		n = amplifiers(instr, phases);
-		while (amplifiers2(instr, n) != 0);
+		n = amplifier_loop(instr, phases);
 		if (n>max){
 			perm=phases;
 			max = n;
@@ -98,9 +106,7 @@ void task2(vector<int> instr){
 int main()
 {
 	string path = "../inputs/day07.txt";
-	//vector<int> input = read_input(path);
-	//vector<int> input =  {3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0};
-	vector<int> input = {3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5};
+	vector<int> input = read_input(path);
 	task1(input); //914828 
 	task2(input);
 	return 0;

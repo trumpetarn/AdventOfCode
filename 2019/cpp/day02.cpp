@@ -20,17 +20,22 @@ namespace day02{
 void task1(vector<int> input){
 	input[1] = 12;
 	input[2] = 2;
-	int res = intcode::run(input);
+	Intcode intcode;
+	intcode.set_program(input);
+	int res = intcode.run();
 	cout << "Star 1: " << res << endl;
 }
 
 void task2(vector<int> input){
 	int res;
+	Intcode intcode;
 	for (int noun=1; noun < 100; noun++){
 		for (int verb=1; verb < noun; verb++) {
 			input[1] = noun;
 			input[2] = verb;
-			res = intcode::run(input);
+			intcode.set_program(input);
+			intcode.reset_program();
+			res = intcode.run();
 			if (res == 19690720){
 				cout << "Star 2: " << 100*noun+verb << endl;
 				return;
