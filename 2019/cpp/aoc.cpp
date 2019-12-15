@@ -48,7 +48,7 @@ void run_day(int n) {
 			break;
 		case 10:
 			time_it(day10::main);
-			break;/*
+			break;
 		case 11:
 			time_it(day11::main);
 			break;
@@ -93,7 +93,7 @@ void run_day(int n) {
 			break;
 		case 25:
 			time_it(day25::main);
-			break;*/
+			break;
 		default:
 			break;
 	}
