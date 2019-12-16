@@ -139,7 +139,7 @@ llint Intcode::tick(){
 			//cout << "Returns " << program[0] << endl;
 			return program[0];
 		default:
-			cout << "ERROR!" << endl;
+			cout << "ERROR! Unknown code (" << DE << ")" << endl;
 			return -3;
 	}
 	return 0;
