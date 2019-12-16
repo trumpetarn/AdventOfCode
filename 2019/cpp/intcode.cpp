@@ -92,9 +92,7 @@ llint Intcode::tick(){
 			if (print_all==true){
 				cout << p1 << endl;
 			}
-			if (p1!=0){
-				last_output = p1;
-			}
+			last_output = p1;
 			program_pos += 2;
 			if (break_next_output){
 				break_next_output = false; 
@@ -226,4 +224,11 @@ int Intcode::increase_memory(int mem_size){
 		current_size++;
 	}
 	return mem_size-current_size;
+}
+
+void Intcode::print_program(){
+	for (auto i : program){
+		cout << i << ',';
+	}
+	cout << endl;
 }

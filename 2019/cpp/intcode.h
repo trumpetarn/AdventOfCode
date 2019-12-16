@@ -17,11 +17,12 @@ public:
 	void provide_input(llint in);
 	int increase_memory(int mem_size);
 	void turn_on_print() {print_all = true;};
+	void set_input(llint in);
+	void print_program();
 private:
 	llint get_param(int pos, int opcode);
 	llint tick();
 	bool get_input(llint &in);
-	void set_input(llint in);
 	void write(llint val, int pos, int opcode);
 
 	std::vector<llint> program;
