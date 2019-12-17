@@ -1,5 +1,6 @@
 #ifndef helper_h
 #include <iostream>
+#include <vector>
 
 typedef long long int llint;
 namespace helper{
@@ -32,6 +33,8 @@ namespace helper{
 	inline std::ostream &operator<<(std::ostream &os, const Point& p) { 
 	    return os << p.x << ',' << p.y;
 	}
+
+	const void print_points(const std::vector<Point> points);
 }//helper
 
 class Direction{
