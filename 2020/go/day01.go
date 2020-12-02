@@ -2,7 +2,8 @@ package main
 /*
 Day 01: Report repair
 
-Some description
+Star 1: Find two values from input that sums to 2020. Return the product of the two numbers
+Star 2: Find three values from input that sums to 2020. Return the product of the three numbers
 */
 
 import (
