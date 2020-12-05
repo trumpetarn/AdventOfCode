@@ -2,20 +2,26 @@ package main
 /*
 Day XX: Title
 
-Some description
+https://adventofcode.com/2020/day/X
 */
 
 import (
 	"fmt"
-	//"io"
 	"io/ioutil"
 	"strings"
 )
 
+func star1(data []string) {
+	fmt.Println("Star 1:", data[0])
+}
+
+func star2(data []string) {
+	fmt.Println("Star 2:", data[0])
+}
+
 func main() {
-	data, _ := ioutil.ReadFile("dayXX.txt")
-	lnData := strings.Split(string(data), "\n")
-	for i, s := range lnData {
-    fmt.Println(i, s)
-	}
+	raw, _ := ioutil.ReadFile("../inputs/dayXX.txt")
+	data := strings.Split(string(raw), "\n\n")
+	star1(data)
+	star2(data)
 }
