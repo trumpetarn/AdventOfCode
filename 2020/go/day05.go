@@ -33,7 +33,7 @@ func findRow(s string) int {
 		case 'B':
 			rows = rows[n:]
 		default:
-			fmt.Println("Oops something went wrong")
+			fmt.Println("Oops something went wrong (char not F/B)")
 		}
 	}
 	return rows[0]
@@ -50,7 +50,7 @@ func findColumn(s string) int {
 		case 'R':
 			cols = cols[n:]
 		default:
-			fmt.Println("Oops something went wrong")
+			fmt.Println("Oops something went wrong (char not L/C)")
 		}
 	}
 	return cols[0]
