@@ -1,4 +1,5 @@
 package main
+
 /*
 Day 05: Binary boarding
 
@@ -16,17 +17,17 @@ const COLS = 8
 
 func newArray(n int) []int {
 	a := make([]int, n)
-  for i := range a {
-      a[i] = i
-  }
-  return a
-} 
+	for i := range a {
+		a[i] = i
+	}
+	return a
+}
 
 func findRow(s string) int {
 	rows := newArray(ROWS)
 	for _, c := range s {
 		var n int
-		n = len(rows)/2
+		n = len(rows) / 2
 		switch c {
 		case 'F':
 			rows = rows[:n]
@@ -43,7 +44,7 @@ func findColumn(s string) int {
 	cols := newArray(COLS)
 	for _, c := range s {
 		var n int
-		n = len(cols)/2
+		n = len(cols) / 2
 		switch c {
 		case 'L':
 			cols = cols[:n]
@@ -57,7 +58,7 @@ func findColumn(s string) int {
 }
 
 func star1(data []string) {
-	var r,c,max int
+	var r, c, max int
 	for _, s := range data {
 		r = findRow(s[:len(s)-3])
 		c = findColumn(s[len(s)-3:])
@@ -70,8 +71,8 @@ func star1(data []string) {
 }
 
 func star2(data []string) {
-	var r,c,max int
-	min := ROWS*8+COLS
+	var r, c, max int
+	min := ROWS*8 + COLS
 	sids := make([]int, min)
 	for _, s := range data {
 		r = findRow(s[:len(s)-3])

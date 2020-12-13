@@ -1,4 +1,5 @@
 package main
+
 /*
 Day 10: Adapter Array
 
@@ -8,13 +9,13 @@ https://adventofcode.com/2020/day/10
 import (
 	"fmt"
 	"io/ioutil"
-	"strings"
-	"strconv"
 	"sort"
+	"strconv"
+	"strings"
 )
 
 func star1(data []int) {
-	ones := 0 
+	ones := 0
 	threes := 1 // our device
 	if data[0] == 1 {
 		ones++
@@ -41,8 +42,8 @@ func star2(data []int) {
 	paths[0] = 1
 	// paths, how many ways can you reach a certain index (i) in data
 	for i := 0; i < len(data); i++ {
-		for j := 1; j <=3 && j+i < len(data); j++ {
-			if data[i+j] - data[i] <= 3 {
+		for j := 1; j <= 3 && j+i < len(data); j++ {
+			if data[i+j]-data[i] <= 3 {
 				paths[i+j] += paths[i]
 			}
 		}
@@ -57,7 +58,7 @@ func main() {
 	intData := make([]int, len(data))
 	intData[0] = 0 // adding the first value
 	for i, n := range data[:len(data)-1] {
-		intData[i+1],_ = strconv.Atoi(n)
+		intData[i+1], _ = strconv.Atoi(n)
 	}
 	sort.Ints(intData)
 	star1(intData)

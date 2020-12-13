@@ -1,4 +1,5 @@
 package main
+
 /*
 Day 06: Custom Customs
 
@@ -14,7 +15,7 @@ import (
 func star1(data []string) {
 	var sum int
 	for _, s := range data {
-		set:= make(map[rune]bool)
+		set := make(map[rune]bool)
 		for _, c := range s {
 			if c != '\n' {
 				set[c] = true
@@ -26,9 +27,9 @@ func star1(data []string) {
 }
 
 func star2(data []string) {
-	var sum,ppl int
+	var sum, ppl int
 	for _, s := range data {
-		set:= make(map[rune]int)
+		set := make(map[rune]int)
 		ppl = 1 // start on 1, last entry will not end on '\n'
 		for _, c := range s {
 			if c != '\n' {
@@ -38,7 +39,7 @@ func star2(data []string) {
 			}
 		}
 		for _, n := range set {
-			if (n == ppl) {
+			if n == ppl {
 				sum += 1
 			}
 		}

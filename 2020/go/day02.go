@@ -1,4 +1,5 @@
 package main
+
 /*
 Day 02: Password Philosophy
 
@@ -10,8 +11,8 @@ Star 2: Validate the c occours in the index x or y but not both
 import (
 	"fmt"
 	"io/ioutil"
-	"strings"
 	"strconv"
+	"strings"
 )
 
 func parseString(s string) (string, string, int, int) {
@@ -38,11 +39,11 @@ func star1(data []string) {
 	fmt.Println("Star 1:", valid)
 }
 
-func star2(data []string){
+func star2(data []string) {
 	valid := 0
 	for _, s := range data {
 		pass, c, x, y := parseString(s)
-		if (pass[x-1]==c[0] || pass[y-1]==c[0]) && !(pass[x-1]==c[0] && pass[y-1]==c[0]) {
+		if (pass[x-1] == c[0] || pass[y-1] == c[0]) && !(pass[x-1] == c[0] && pass[y-1] == c[0]) {
 			valid++
 		}
 	}

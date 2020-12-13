@@ -1,4 +1,5 @@
 package main
+
 /*
 Day 08: Handheld Halting
 
@@ -8,12 +9,12 @@ https://adventofcode.com/2020/day/8
 import (
 	"fmt"
 	"io/ioutil"
-	"strings"
 	"strconv"
+	"strings"
 )
 
-/* Runs instructions (acc, jmp, nop), 
-returns accumulated value (acc) and bool (true if ending correctly)  
+/* Runs instructions (acc, jmp, nop),
+returns accumulated value (acc) and bool (true if ending correctly)
 */
 func runInstructions(data []string) (int, bool) {
 	var acc int
@@ -26,7 +27,7 @@ func runInstructions(data []string) (int, bool) {
 		visited[i] = true
 		row := strings.Split(data[i], " ")
 		val, _ := strconv.Atoi(row[1])
-		switch row[0]{
+		switch row[0] {
 		case "acc":
 			acc += val
 			i++

@@ -1,4 +1,5 @@
 package main
+
 /*
 Day 07: Handy Haversacks
 
@@ -8,13 +9,13 @@ https://adventofcode.com/2020/day/7
 import (
 	"fmt"
 	"io/ioutil"
-	"strings"
 	"strconv"
+	"strings"
 )
 
 type bag struct {
 	contains []string
-	nBags []int
+	nBags    []int
 }
 
 func containsGold(b *bag, all map[string]*bag) bool {
@@ -31,8 +32,8 @@ func containsGold(b *bag, all map[string]*bag) bool {
 	return false
 }
 
-/* dull brown bags contain 1 light indigo bag, 4 mirrored yellow bags, 5 faded silver bags. 
-*/
+/* dull brown bags contain 1 light indigo bag, 4 mirrored yellow bags, 5 faded silver bags.
+ */
 func star1(data []string) {
 	bags := make(map[string]*bag, 0)
 	for _, s1 := range data {
@@ -44,7 +45,7 @@ func star1(data []string) {
 				c := strings.Split(s2, " ")
 				strconv.Atoi(c[0])
 				bags[a[0]].nBags[i], _ = strconv.Atoi(c[0])
-				bags[a[0]].contains[i] = c[1]+" "+c[2]
+				bags[a[0]].contains[i] = c[1] + " " + c[2]
 			}
 		} else {
 			bags[a[0]] = &bag{contains: make([]string, 0)}

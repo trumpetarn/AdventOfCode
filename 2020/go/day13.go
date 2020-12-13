@@ -38,12 +38,12 @@ func star2(IDs []int) {
 	for {
 		nextTs := 1
 		isDone := true
-		for i:=0; i<len(IDs); i++ {
-			if (timestamp+i) % IDs[i] != 0 {
+		for i := 0; i < len(IDs); i++ {
+			if (timestamp+i)%IDs[i] != 0 {
 				isDone = false
 				break
 			}
-			// We have found a timestamp that works, since all inputs are prime we can multiply 
+			// We have found a timestamp that works, since all inputs are prime we can multiply
 			// all ts that works to find the next time all found will match again
 			nextTs *= IDs[i]
 		}

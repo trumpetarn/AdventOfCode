@@ -1,4 +1,5 @@
 package main
+
 /*
 Day 09: Encoding Error
 
@@ -8,14 +9,14 @@ https://adventofcode.com/2020/day/9
 import (
 	"fmt"
 	"io/ioutil"
-	"strings"
 	"strconv"
+	"strings"
 )
 
 const PS = 25 //Preamble size
 
 func isValid(ix int, res int, data []int) bool {
-	vals := data[ix:ix+PS]
+	vals := data[ix : ix+PS]
 	for i, n := range vals {
 		for j, m := range vals {
 			if j != i {
@@ -33,10 +34,10 @@ func findSlice(ix int, res int, data []int) []int {
 	sum := 0
 	for i := 0; i < len(vals); i++ {
 		sum = vals[i]
-		for j := i+1; j < len(vals); j++ {
+		for j := i + 1; j < len(vals); j++ {
 			sum += vals[j]
 			if sum == res {
-				return vals[i:j+1]
+				return vals[i : j+1]
 			}
 			if sum > res {
 				break
@@ -57,7 +58,7 @@ func evaluate(ns []int) int {
 			max = n
 		}
 	}
-	return min+max
+	return min + max
 }
 
 func star1(data []int) {
@@ -70,7 +71,7 @@ func star1(data []int) {
 	}
 }
 
-func star2(i int, n int,data []int) {
+func star2(i int, n int, data []int) {
 	ans := findSlice(i, n, data)
 	//fmt.Println(ans)
 	fmt.Println("Star 2:", evaluate(ans))

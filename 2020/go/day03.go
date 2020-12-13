@@ -1,4 +1,5 @@
 package main
+
 /*
 Day 03: Toboggan Trajectory
 
@@ -11,7 +12,7 @@ import (
 	"strings"
 )
 
-func slide(rstep int, dstep int, data []string) (int) {
+func slide(rstep int, dstep int, data []string) int {
 	x := 0
 	trees := 0
 	for y, s := range data {
@@ -31,7 +32,7 @@ func star1(data []string) {
 	fmt.Println("Star 1:", t)
 }
 
-func star2(data []string){
+func star2(data []string) {
 	t1 := slide(1, 1, data)
 	t2 := slide(3, 1, data)
 	t3 := slide(5, 1, data)
