@@ -1,7 +1,7 @@
 import threading
 import time
 
-def init_firewall(filename='inputs/input_day13.txt'):
+def init_firewall(filename='../new_inputs/input_day13.txt'):
 	file = open(filename)
 	data = file.read().split('\n')
 	firewall = []

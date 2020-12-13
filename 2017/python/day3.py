@@ -33,7 +33,8 @@ def distance_from_centre(value):
 	return distance_from_axis + radius(value)
 
 def task1():
-	val = 277678
+	#val = 277678
+	val = 312051
 	print("Task 1:", distance_from_centre(val) )
 
 def next_index(i,j,x):
@@ -66,7 +67,8 @@ def print_matrix(x, n):
 		print("\n", end='')
 	
 def task2():
-	val = 277678
+	#val = 277678
+	val = 312051
 	n =11
 	x =  np.zeros((n, n))
 	i = n//2

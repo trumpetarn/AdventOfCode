@@ -18,7 +18,8 @@ def distribute_memory(memory, index):
 	return memory
 	
 def tasks():
-	mem = [[10,3,15,10,5,15,5,15,9,2,5,8,5,2,3,6]]
+	#mem = [[10,3,15,10,5,15,5,15,9,2,5,8,5,2,3,6]]
+	mem = [[0,5,10,0,11,14,13,4,11,8,8,7,1,4,12,11]]
 	i = get_max_index(mem[0][:])
 	new = distribute_memory(mem[0][:], i)
 	while (not new in mem):

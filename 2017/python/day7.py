@@ -49,7 +49,7 @@ def task2(name, lines):
   compute_tree(name, lines)
 
 def __main__():
-  file = open('inputs/input_day7.txt')
+  file = open('../new_inputs/input_day7.txt')
   bottoms, top, lines = populate_lists(file)
   name = task1(bottoms, top)
   task2(name, lines)

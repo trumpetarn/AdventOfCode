@@ -18,7 +18,7 @@ void get_components(bool debug) {
 	if (debug) {
 		fp = fopen("/repo/AdventOfCode/2017/inputs/input_test.txt", "r");
 	}else{
-		fp = fopen("/repo/AdventOfCode/2017/inputs/input_day24.txt", "r");
+		fp = fopen("/repo/AdventOfCode/2017/new_inputs/input_day24.txt", "r");
 	}
 	int p1, p2;
 	for (int i=0;i<N;i++) {

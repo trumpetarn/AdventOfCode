@@ -1,7 +1,7 @@
 import threading
 import time
 
-def populate_list(filename='inputs/input_day5.txt'):
+def populate_list(filename='../new_inputs/input_day5.txt'):
 	file = open(filename)
 	mylist = filter(None, list(file.read().split('\n')))
 	return map(int, mylist)

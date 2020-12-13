@@ -24,7 +24,7 @@ def max_tree(port, components, hist):
 		hist.remove(c)
 	return maxi
 
-a = open("inputs/input_day24.txt", 'r')
+a = open("../new_inputs/input_day24.txt", 'r')
 inputs = a.read().split('\n')
 components = []
 for comp in inputs:

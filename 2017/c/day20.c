@@ -22,7 +22,7 @@ static particle particles[N];
 
 /* Initiates the particles struct */
 void init(void){
-	FILE *fp = fopen("/repo/AdventOfCode/2017/inputs/input_day20.txt", "r");
+	FILE *fp = fopen("/repo/AdventOfCode/2017/new_inputs/input_day20.txt", "r");
 	int px,py,pz,vx,vy,vz,ax,ay,az;
 	for (int i=0;i<N;i++) {
 		fscanf(fp, "p=< %d,%d,%d>, v=< %d,%d,%d>, a=< %d,%d,%d>\n", &px, &py, &pz, &vx, &vy, &vz, &ax, &ay, &az);

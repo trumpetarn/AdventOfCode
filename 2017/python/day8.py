@@ -26,7 +26,7 @@ def init_memory(instructions):
 	
 
 def tasks():
-  file = open('inputs/input_day8.txt')
+  file = open('../new_inputs/input_day8.txt')
   instructions = []
   for line in file:
   	instructions.append(line.split(' '))

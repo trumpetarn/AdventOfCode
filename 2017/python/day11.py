@@ -21,7 +21,7 @@ def hexgrid_walk(data):
 
 
 def main():
-	file = open('inputs/input_day11.txt')
+	file = open('../new_inputs/input_day11.txt')
 	data = file.read()
 	data = data[:-1].split(',')
 	steps, dist = hexgrid_walk(data)

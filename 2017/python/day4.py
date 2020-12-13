@@ -32,5 +32,5 @@ def task2(input, isFile=True):
       valid = valid + 1
   return valid
 
-print("Task1\nNumber of valid Passphrases:", task1('inputs/input_day4.txt'))
-print("---\nTask2\nNumber of valid Passphrases:", task2('inputs/input_day4.txt'))
+print("Task1\nNumber of valid Passphrases:", task1('../new_inputs/input_day4.txt'))
+print("---\nTask2\nNumber of valid Passphrases:", task2('../new_inputs/input_day4.txt'))

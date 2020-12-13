@@ -6,7 +6,7 @@ def value(ins, reg,p):
 		return reg[p][ins[-1]]
 	return int(ins[-1])
 
-def task2(file="inputs/input_day18.txt"):
+def task2(file="../new_inputs/input_day18.txt"):
 	data = open(file)
 	instructions = data.read().split('\n')
 	N = len(instructions)
@@ -69,7 +69,7 @@ def task2(file="inputs/input_day18.txt"):
 			break
 	print "Task2: Pgm1 sends",sends,"times"
 
-def task1(reg={}, file="inputs/input_day18.txt"):
+def task1(reg={}, file="../new_inputs/input_day18.txt"):
 	data = open(file)
 	instructions = data.read().split('\n')
 	i = 0

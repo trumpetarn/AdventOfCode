@@ -27,7 +27,7 @@ def read_instructions(instructions, data):
 
 def main():
 	data = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p']
-	file = open('inputs/input_day16.txt')
+	file = open('../new_inputs/input_day16.txt')
 	instructions = file.read().split(',')
 	data = read_instructions(instructions, data[:])
 	print "Task 1:", ''.join(data)

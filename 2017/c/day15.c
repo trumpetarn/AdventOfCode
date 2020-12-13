@@ -38,9 +38,13 @@ int main(void)
 	/* Input Data
 	Generator A starts with 512
 	Generator B starts with 191
+
+	Generator A starts with 699
+	Generator B starts with 124
+
 	*/
-	unsigned long prevGenA = 512;
-	unsigned long prevGenB = 191;
+	unsigned long prevGenA = 699;
+	unsigned long prevGenB = 124;
 	int matches = 0;
 	for (int i=0;i<40000000;i++)
 	{
@@ -54,8 +58,8 @@ int main(void)
 	printf("Task 1: %d\n", matches);
 
 	matches = 0;
-	prevGenA = 512;
-	prevGenB = 191;
+	prevGenA = 699;
+	prevGenB = 124;
 	for (int i=0;i<5000000;i++)
 	{
 		prevGenA = next_value(prevGenA, genA, 4);

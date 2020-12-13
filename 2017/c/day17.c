@@ -1,5 +1,5 @@
 #include <stdio.h>
-#define INPUT 349
+#define INPUT 371//349
 
 void initBuffer(unsigned long *buffer, unsigned long n)
 {

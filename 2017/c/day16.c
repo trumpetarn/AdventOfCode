@@ -36,7 +36,7 @@ int return_number(char a, char b)
 
 int read_instructions()
 {
-	FILE *fp = fopen("/repo/AdventOfCode/2017/inputs/input_day16.txt", "r");
+	FILE *fp = fopen("/repo/AdventOfCode/2017/new_inputs/input_day16.txt", "r");
 	char c,d,e;
 	int a,b;
 	int i = 0;

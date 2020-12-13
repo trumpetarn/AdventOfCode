@@ -39,7 +39,7 @@ def task2(data):
 
 
 def main():
-	file = open('inputs/input_day12.txt')
+	file = open('../new_inputs/input_day12.txt')
 	data = format_data(file)
 	programs = find_all_in_group(data)
 	num = task2(data)

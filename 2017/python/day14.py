@@ -53,7 +53,8 @@ def find_groups(grid):
 	return group_id
 
 def main():
-	in_data = "hwlqcszp"
+	#in_data = "hwlqcszp"
+	in_data = "hfdlxzhv"
 	grid, num_used = generate_grid(in_data)
 	print "Task 1:",num_used
 	print "Task 2;",find_groups(grid)

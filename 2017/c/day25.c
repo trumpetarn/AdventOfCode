@@ -29,7 +29,7 @@ int main(void) {
 	State s = A;
 	int pos = N/2;
 	init_array();
-	for (int i=0; i<12459852; i++) {
+	for (int i=0; i<12208951; i++) {
 		if (pos < 0 || pos >= N) {
 			printf("%d, %d\n", i, pos);
 			break;
@@ -42,7 +42,7 @@ int main(void) {
 					pos++;
 					s = B;
 				}else{
-					tape[pos] = 1;
+					tape[pos] = 0;
 					pos--;
 					s = E;
 				}
@@ -50,12 +50,12 @@ int main(void) {
 			case B:
 				if (tape[pos]==0) {
 					tape[pos] =  1;
-					pos++;
+					pos--;
 					s = C;
 				}else{
-					tape[pos] = 1;
+					tape[pos] = 0;
 					pos++;
-					s = F;
+					s = A;
 				}
 				break;
 			case C:
@@ -66,18 +66,18 @@ int main(void) {
 				}else{
 					tape[pos] = 0;
 					pos++;
-					s = B;
+					s = C;
 				}
 				break;
 			case D:
 				if (tape[pos]==0) {
 					tape[pos] =  1;
-					pos++;
+					pos--;
 					s = E;
 				}else{
 					tape[pos] = 0;
 					pos--;
-					s = C;
+					s = F;
 				}
 				break;
 			case E:
@@ -86,20 +86,20 @@ int main(void) {
 					pos--;
 					s = A;
 				}else{
-					tape[pos] = 0;
-					pos++;
-					s = D;
+					tape[pos] = 1;
+					pos--;
+					s = C;
 				}
 				break;
 			case F:
 				if (tape[pos]==0) {
 					tape[pos] =  1;
-					pos++;
-					s = A;
+					pos--;
+					s = E;
 				}else{
 					tape[pos] = 1;
 					pos++;
-					s = C;
+					s = A;
 				}
 				break;
 		}

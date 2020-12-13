@@ -27,7 +27,7 @@ def clean_input(line):
 	return clean_str, num_of_garbage
 
 def tasks():
-	file = open('inputs/input_day9.txt')
+	file = open('../new_inputs/input_day9.txt')
 	line = file.readline()
 	clean_str,garbage = clean_input(line[0:-1])
 	points = 0

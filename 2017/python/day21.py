@@ -2,7 +2,7 @@ import numpy as np
 import itertools
 
 def read_input():
-	in_data = open("inputs/input_day21.txt")
+	in_data = open("../new_inputs/input_day21.txt")
 	convertions = {}
 	for line in in_data:
 		data = line.split(' ')
