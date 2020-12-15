@@ -9,39 +9,46 @@ https://adventofcode.com/2020/day/14
 import (
 	"fmt"
 	"io/ioutil"
-	"math"
-	"strconv"
 	"strings"
-	//"sort"
-	//"time"
 )
 
-// Todo: simplify first
+func getMasks(s string) (int64, int64, int64, int64) {
+	var mask, xmask, invmask, invxmask int64
+	mask = 0
+	invmask = 1
+	xmask = 0
+	invxmask = 0
+	for i := 0; i < len(s); i++ {
+		mask = mask << 1
+		invmask = invmask << 1
+		xmask = xmask << 1
+		invxmask = invxmask << 1
+		switch s[i] {
+		case '0':
+			invxmask += 1
+		case '1':
+			invmask += 1
+			invxmask += 1
+			mask += 1
+		case 'X':
+			invmask += 1
+			xmask += 1
+		default:
+			panic("Invalid Mask value")
+		}
+	}
+	return mask, invmask, xmask, invxmask
+}
+
 func star1(data []string) {
-	var mask map[int]byte
-	mem := make(map[int]int64)
+	var mask, invmask, addr, val int64
+	mem := make(map[int64]int64)
 	for _, s := range data {
 		if s[:4] == "mask" {
-			mask = make(map[int]byte)
-			for i := len(s) - 1; i > 6; i-- {
-				if s[i] != 'X' {
-					mask[len(s)-i] = s[i]
-				}
-			}
+			mask, invmask, _, _ = getMasks(s[7:])
 		} else {
-			var idx int
-			var val, toAdd int64
-			fmt.Sscanf(s, "mem[%d] = %d", &idx, &val)
-			bin := []byte(strconv.FormatInt(val, 2))
-			for key, v := range mask {
-				if key <= len(bin) {
-					bin[len(bin)-key] = v
-				} else if v == '1' {
-					toAdd += int64(math.Pow(2, float64(key-1)))
-				}
-			}
-			x, _ := strconv.ParseInt(string(bin), 2, 64)
-			mem[idx] = x + toAdd
+			fmt.Sscanf(s, "mem[%d] = %d", &addr, &val)
+			mem[addr] = (val & invmask) | mask
 		}
 	}
 	var sum int64
@@ -58,25 +65,7 @@ func star2(data []string) {
 	for _, s := range data {
 		if s[:4] == "mask" {
 			masks = make([]int64, 0)
-			mask = 0
-			xmask = 0
-			invxmask = 0
-			for i := 7; i < len(s); i++ {
-				mask = mask << 1
-				xmask = xmask << 1
-				invxmask = invxmask << 1
-				switch s[i] {
-				case '0':
-					invxmask += 1
-				case '1':
-					invxmask += 1
-					mask += 1
-				case 'X':
-					xmask += 1
-				default:
-					panic("invalid")
-				}
-			}
+			mask, _, xmask, invxmask = getMasks(s[7:])
 			masks = append(masks, mask)
 			var i int64
 			for i = 1; i <= xmask; i *= 2 {

@@ -8,11 +8,7 @@ https://adventofcode.com/2020/day/15
 
 import (
 	"fmt"
-	//"io/ioutil"
-	//"strings"
 )
-
-// 0,3,6,0,3,3,1,0,4,0,...,436
 
 func game(data []int, end int) int {
 	mem := make(map[int]int)
