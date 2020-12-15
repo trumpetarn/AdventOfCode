@@ -9,9 +9,9 @@ https://adventofcode.com/2020/day/14
 import (
 	"fmt"
 	"io/ioutil"
-	"strings"
 	"math"
 	"strconv"
+	"strings"
 	//"sort"
 	//"time"
 )
@@ -23,52 +23,52 @@ func star1(data []string) {
 	for _, s := range data {
 		if s[:4] == "mask" {
 			mask = make(map[int]byte)
-			for i:=len(s)-1; i>6; i--{
+			for i := len(s) - 1; i > 6; i-- {
 				if s[i] != 'X' {
 					mask[len(s)-i] = s[i]
 				}
 			}
-		}else{
+		} else {
 			var idx int
-			var val,toAdd int64
+			var val, toAdd int64
 			fmt.Sscanf(s, "mem[%d] = %d", &idx, &val)
 			bin := []byte(strconv.FormatInt(val, 2))
 			for key, v := range mask {
-				if key<=len(bin){
+				if key <= len(bin) {
 					bin[len(bin)-key] = v
-				}else if v == '1'{
-					toAdd += int64(math.Pow(2,float64(key-1)))
+				} else if v == '1' {
+					toAdd += int64(math.Pow(2, float64(key-1)))
 				}
 			}
-			x,_ := strconv.ParseInt(string(bin), 2, 64)
-			mem[idx] = x+toAdd
+			x, _ := strconv.ParseInt(string(bin), 2, 64)
+			mem[idx] = x + toAdd
 		}
 	}
 	var sum int64
-	for _,v := range mem {
+	for _, v := range mem {
 		sum += v
 	}
 	fmt.Println("Star 1:", sum)
 }
 
 func star2(data []string) {
-	var mask,xmask,invxmask,addr,val int64
+	var mask, xmask, invxmask, addr, val int64
 	var masks []int64
 	mem := make(map[int64]int64)
 	for _, s := range data {
 		if s[:4] == "mask" {
-			masks = make([]int64,0)
+			masks = make([]int64, 0)
 			mask = 0
 			xmask = 0
 			invxmask = 0
-			for i:=7; i<len(s); i++{
+			for i := 7; i < len(s); i++ {
 				mask = mask << 1
 				xmask = xmask << 1
 				invxmask = invxmask << 1
-				switch s[i]{
-				case '0': 
+				switch s[i] {
+				case '0':
 					invxmask += 1
-				case '1': 
+				case '1':
 					invxmask += 1
 					mask += 1
 				case 'X':
@@ -79,25 +79,25 @@ func star2(data []string) {
 			}
 			masks = append(masks, mask)
 			var i int64
-			for i=1; i<=xmask; i*=2 {
+			for i = 1; i <= xmask; i *= 2 {
 				x := (i & xmask)
 				if x > 0 {
 					l := len(masks)
-					for j:=0; j<l; j++{
-						masks = append(masks, x | masks[j])
+					for j := 0; j < l; j++ {
+						masks = append(masks, x|masks[j])
 					}
 				}
 			}
-		}else{
+		} else {
 			fmt.Sscanf(s, "mem[%d] = %d", &addr, &val)
 			addr = addr & invxmask // set X positions to zero
-			for _,m := range masks {
+			for _, m := range masks {
 				mem[addr|m] = val // Apply bitmask
 			}
 		}
 	}
 	var sum int64
-	for _,v := range mem {
+	for _, v := range mem {
 		sum += v
 	}
 	fmt.Println("Star 2:", sum)
