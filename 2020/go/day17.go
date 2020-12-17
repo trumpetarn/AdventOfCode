@@ -9,8 +9,6 @@ https://adventofcode.com/2020/day/17
 import (
 	"fmt"
 	"io/ioutil"
-	//"math"
-	//"strconv"
 	"strings"
 )
 
@@ -28,13 +26,7 @@ func zeroCube(n int) [][][]int {
 func zeroCube4d(n int) [][][][]int {
 	ret := make([][][][]int, n)
 	for k := 0; k < n; k++ {
-		ret[k] = make([][][]int, n)
-		for l := 0; l < n; l++ {
-			ret[k][l] = make([][]int, n)
-			for m := 0; m < n; m++ {
-				ret[k][l][m] = make([]int, n)
-			}
-		}
+		ret[k] = zeroCube(n)
 	}
 	return ret
 }
@@ -57,15 +49,7 @@ func initCube(data []string) [][][]int {
 func initCube4d(data []string) [][][][]int {
 	start := zeroCube4d(len(data))
 	mid := (len(data)) / 2
-	for n, l := range data {
-		for i, r := range l {
-			if r == '#' {
-				start[mid][mid][n][i] = 1
-			} else {
-				start[mid][mid][n][i] = 0
-			}
-		}
-	}
+	start[mid] = initCube(data)
 	return start
 }
 
@@ -136,9 +120,16 @@ func printPlane(p [][]int) {
 }
 
 func printCube(cube [][][]int) {
-	for _, i := range cube {
-		printPlane(i)
-		fmt.Println("")
+	for i, p := range cube {
+		fmt.Println("z:", i)
+		printPlane(p)
+	}
+}
+
+func printHypercube(hc [][][][]int) {
+	for i, c := range hc {
+		fmt.Println("w:", i)
+		printCube(c)
 	}
 }
 
@@ -202,28 +193,24 @@ func sumCube(cube [][][]int) int {
 	return ret
 }
 
-func sumCube4d(cube [][][][]int) int {
+func sumCube4d(hc [][][][]int) int {
 	ret := 0
-	for _, p := range cube {
-		for _, l := range p {
-			for _, n := range l {
-				for _, v := range n {
-					ret += v
-				}
-			}
-		}
+	for _, c := range hc {
+		ret += sumCube(c)
 	}
 	return ret
 }
 
-func star1(cube [][][]int) {
+func star1(data []string) {
+	cube := initCube(data)
 	for i := 0; i < 6; i++ {
 		cube = conway(cube)
 	}
 	fmt.Println("Star 1:", sumCube(cube))
 }
 
-func star2(cube [][][][]int) {
+func star2(data []string) {
+	cube := initCube4d(data)
 	for i := 0; i < 6; i++ {
 		cube = conway4d(cube)
 	}
@@ -233,8 +220,6 @@ func star2(cube [][][][]int) {
 func main() {
 	raw, _ := ioutil.ReadFile("../inputs/day17.txt")
 	data := strings.Split(string(raw), "\n")
-	start := initCube(data[:len(data)-1])
-	star1(start)
-	start2 := initCube4d(data[:len(data)-1])
-	star2(start2)
+	star1(data[:len(data)-1])
+	star2(data[:len(data)-1])
 }
