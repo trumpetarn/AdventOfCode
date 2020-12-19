@@ -12,28 +12,25 @@ import (
 	"strconv"
 )
 
-func calc(s string) int {
-	var op,x,y int
+func calc2(s string) int {
+	var op,x,y,sum int
 	first := true
 	s = strings.Replace(s, "(", "",-1)
 	s = strings.Replace(s, ")", "",-1)
 	sl := strings.Split(s, " ")
+	next := sl
 	//fmt.Println(sl)
 	for _,v := range sl {
 		if len(v) == 0{
 			continue
 		}
+		next = append(next, v)
 		switch v{
-		case "(":
-			continue
-		case ")":
-			continue
-		case " ":
-			continue
 		case "+":
 			op=0
 		case "*":
 			op=1
+			first = true
 		default:
 			if first {
 				x,_=strconv.Atoi(v)
@@ -43,9 +40,10 @@ func calc(s string) int {
 				y,_=strconv.Atoi(v)
 				//fmt.Println("y",y)
 				if op==0 {
-					x += y
+					next = next[:len(next)-3]
+					next = append(next, strconv.Itoa(x+y))
 				}else{
-					x *= y
+					
 				}
 			}
 			//fmt.Println(x,y)
@@ -54,7 +52,7 @@ func calc(s string) int {
 	return x
 }
 
-func calcLine(l string) int {
+func calcLine(l string, b bool) int {
 	var par []int
 	for i,r := range l {
 		//fmt.Println(l)
@@ -65,7 +63,12 @@ func calcLine(l string) int {
 			n := len(par)-1
 			j := par[n]
 			par = par[:n]
-			v := strconv.Itoa(calc(l[j:i]))
+			var v string
+			if b {
+				v = strconv.Itoa(calc2(l[j:i]))
+			}else{
+				v = strconv.Itoa(calc(l[j:i]))
+			}
 			pad := i-j-len(v)
 			//tmp := l
 			l = l[:j] + v + strings.Repeat(" ", pad) + l[i:]
@@ -73,18 +76,25 @@ func calcLine(l string) int {
 			continue
 		}
 	}
+	if b{
+		return calc2(l)
+	}
 	return calc(l)
 }
 
 func star1(data []string) {
 	ans := 0
 	for _, line := range data {
-		ans += calcLine(line)
+		ans += calcLine(line, false)
 	}
 	fmt.Println("Star 1:", ans)
 }
 
 func star2(data []string) {
+	ans := 0
+	for _, line := range data {
+		ans += calcLine(line, true)
+	}
 	fmt.Println("Star 2:", data[0])
 }
 
