@@ -10,11 +10,12 @@ import (
 	"io/ioutil"
 	"strings"
 	"strconv"
+	"regexp"
 )
 
 func parseRules(rs string) [][]string {
 	d := strings.Split(string(rs), "\n")
-	rules := make([][]string, len(d))
+	rules := make([][]string, len(d)+42)
 	//letters := make(map[int]rune)
 	for _,s := range d {
 		split := strings.Split(s, ": ")
@@ -46,24 +47,101 @@ func parseRule(n int, r [][]string) string {
 	return str
 }
 
+func createRegex(n int, r [][]string) string {
+	str :=""
+	par := false
+	for _,s := range r[n] {
+		if s == "|" {
+			str += "|"
+			par = true
+		} else if s == "\"a\"" || s == "\"b\"" {
+			str += string(s[1])
+		} else {
+			k,_ := strconv.Atoi(s)
+			str += createRegex(k, r)
+		}
+	}
+	if par {
+		str = "(" + str
+		str += ")"
+	}
+	return str
+}
+
+func createRegexInf(n int, r [][]string, mem []int) (string,int) {
+	y := 0
+	/* 	I dont really understad why recursion more than 5 times works but it does 
+			Probably my "+" addition is wrong and by recursion we include all possible 
+			versions instead		*/
+	for i,k := range mem {
+		if n == k {
+			y++
+			if y > 5 {
+				//fmt.Println(mem)
+				return "+", i
+			}
+		}
+	}
+	mem = append(mem, n)
+	str :=""
+	par := false
+	for _,s := range r[n] {
+		if s == "|" {
+			str += "|"
+			par = true
+		} else if s == "\"a\"" || s == "\"b\"" {
+			str += string(s[1])
+		} else {
+			k,_ := strconv.Atoi(s)
+			tmp,m := createRegexInf(k, r, mem)
+			str += tmp
+			if m >= 0 {
+				str = "(?:(" + str + ")+)"
+				par = true
+			}
+		}
+	}
+	if par {
+		str = "(?:" + str + ")"
+	}
+	return str, -1
+}
+
 func star1(rules string, messages string) {
 	r := parseRules(rules)
-	fmt.Println(r)
-	x := parseRule(4,r) + "+" + parseRule(1,r) + "+" + parseRule(5,r)
-	/*
-	for msg := range strings.Split(messages, "\n") {
-
+	//fmt.Println(r)
+	x := "^" + createRegex(0,r) + "$"
+	re,_ := regexp.Compile(x)
+	num:= 0
+	for _,msg := range strings.Split(messages, "\n") {
+		if (re.MatchString(msg)) {
+			num++
+		}
 	}
-	*/	
-	fmt.Println("Star 1:", x)
+	fmt.Println("Star 1:", num)
 }
 
 func star2(rules string, messages string) {
-	fmt.Println("Star 2:", messages[0])
+	r := parseRules(rules)
+	r[8] = []string{"42", "|", "42", "8"}
+	r[11] = []string{"42", "31", "|", "42", "11", "31"}
+	//fmt.Println(r)
+	var mem []int
+	x,_ := createRegexInf(0,r, mem)
+	x = "^" + x + "$"
+	//fmt.Println(x)
+	re,_ := regexp.Compile(x)
+	num:= 0
+	for _,msg := range strings.Split(messages, "\n") {
+		if (re.MatchString(msg)) {
+			num++
+		}
+	}
+	fmt.Println("Star 2:", num)
 }
 
 func main() {
-	raw, _ := ioutil.ReadFile("../inputs/day19_example.txt")
+	raw, _ := ioutil.ReadFile("../inputs/day19.txt")
 	data := strings.Split(string(raw), "\n\n")
 
 	star1(data[0],data[1])
