@@ -93,34 +93,6 @@ func matches(p1 Piece, p2 Piece) bool {
 	return false
 }
 
-func align(p1 [][]int, p2 [][]int) ([][]int, [][]int) {
-	//a,b,c,d,e,f,g,h := true,true,true,true,true,true,true,true
-	l:=len(p1)
-	for x:=0;x<2;x++{
-		for y:=0;y<2;y++{
-			for b:=0;b<4;b++{
-				for c:=0;c<4;c++{
-					a:=true
-					for i:=0;i<l;i++ {
-						if (p1[i][0] != p2[i][0]) {
-							a=false
-							break
-						}
-					}
-					if a {
-						return p1, p2
-					}
-					p2 = rotate(p2)
-				}
-				p1 = rotate(p1)
-			}
-			p1 = flipY(p1)
-		}
-		p1 = flipX(p1)
-	}
-	return p1, p2
-}
-
 func initPieces(data []string) []Piece {
 	pieces := make([]Piece, len(data))
 	for i,s := range data {
@@ -189,18 +161,26 @@ func trimSlice(s []int, r map[int]bool) []int {
 }
 
 func trimPiece(p Piece) Piece {
-	fmt.Println(p)
 	var newPiece Piece
 	newPiece.id = p.id
 	newPiece.match_id = p.match_id
 	for _,row := range p.piece[1:len(p.piece)-1] {
 		newPiece.piece = append(newPiece.piece, row[1:len(row)-1])
 	}
-	fmt.Println(newPiece)
 	return newPiece
 }
 
-func assemble(pieces map[int]Piece) [][]int {
+
+func trimPiece2(p [][]int) [][]int {
+	var newPiece [][]int
+	for _,row := range p[1:len(p)-1] {
+		newPiece = append(newPiece, row[1:len(row)-1])
+	}
+	return newPiece
+}
+
+
+func assemble(pieces map[int]Piece) [][]Piece {
 	// find a starting point (corner piece)
 
 	start := 0
@@ -209,16 +189,16 @@ func assemble(pieces map[int]Piece) [][]int {
 			start = p.id
 		}
 	}
-	grid := make([][]int, 0	)
+	grid := make([][]Piece, 0	)
 
 	placed := make(map[int]bool)
 	placed[start] = true
 	next := start
 
 	// First row
-	var row []int
+	var row []Piece
 	if next == start {
-		row = append(row, next)
+		row = append(row, pieces[next])
 	}
 	//Loops
 	lineBr:= false
@@ -245,23 +225,23 @@ func assemble(pieces map[int]Piece) [][]int {
 			// last piece
 		}
 		next = tmp
-		row = append(row, next)
+		row = append(row, pieces[next])
 	}
 	placed[next] = true
 	// Reseterande 
 
 	grid = append(grid, row)
 	for len(placed) < len(pieces) {
-		var newRow []int
+		var newRow []Piece
 		for _,id := range row {
-			alt := pieces[id].match_id
+			alt := pieces[id.id].match_id
 			alt = trimSlice(alt, placed)
 			if len(alt) != 1 {
 				//fmt.Println(len(alt), placed)
 				panic("oops")
 			}
 			placed[alt[0]] = true
-			newRow = append(newRow, alt[0])
+			newRow = append(newRow, pieces[alt[0]])
 		}
 		grid = append(grid, newRow)
 		row = newRow
@@ -270,13 +250,77 @@ func assemble(pieces map[int]Piece) [][]int {
 	return grid
 }
 
+func merge(p1 [][]int, p2 [][]int) [][]int {
+	//a,b,c,d,e,f,g,h := true,true,true,true,true,true,true,true
+	if len(p1) != len(p2) {
+		fmt.Println(p1, p2)
+		panic("mismatch")
+	}
+	l:=len(p1)
+	
+	for x:=0;x<2;x++{
+		for y:=0;y<2;y++{
+			for b:=0;b<4;b++{
+				for c:=0;c<4;c++{
+					a:=true
+					l1:=len(p1[0])
+					for i:=0;i<l;i++ {
+						if (p1[i][l1-1] != p2[i][0]) {
+							a=false
+							break
+						}
+					}
+					if a {
+						// merge
+						var newP [][]int
+						for j,_ := range p1 {
+							newRow := append(p1[j][:l1-1],p2[j][1:]...)
+							newP = append(newP,newRow)
+						}
+						return newP
+					}
+					p2 = rotate(p2)
+				}
+				p1 = rotate(p1)
+			}
+			p1 = flipY(p1)
+		}
+		p1 = flipX(p1)
+	}
+	panic("oh no")
+	return nil
+}
+
+func makeImage(grid [][]Piece) [][]int {
+	var img [][]int
+	for _,row := range grid {
+		var imgR [][]int
+		for j,p := range row {
+			if j == 0 {
+				imgR = p.piece
+			} else {
+				imgR = merge(imgR, p.piece)
+			}
+			
+		}
+		imgR = trimPiece2(imgR)
+		printM(imgR)
+		/*
+		if i == 0 {
+			img = imgR
+		} else {
+			imgR = merge(img, imgR)
+		}
+		*/
+	}
+	return img
+}
 
 func star2(p []Piece) {
 	pm := initPiecesMap(p)
 	a := assemble(pm)
-
-	trimPiece(pm[a[0][0]])
-	fmt.Println("Star 2:", a)
+	img := makeImage(a)
+	fmt.Println("Star 2:", img)
 }
 
 func main() {
