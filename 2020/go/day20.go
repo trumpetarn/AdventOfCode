@@ -20,45 +20,48 @@ type Piece struct {
 
 // Rotates 90 degrees clockwise
 func rotate(p [][]int) ([][]int) {
-	l := len(p)
-	newP := make([][]int, l)
-	for k:=0;k<l;k++{
-		newP[k] = make([]int, l)
+	l1 := len(p)
+	l2 := len(p[0])
+	newP := make([][]int, l2)
+	for k:=0;k<l2;k++{
+		newP[k] = make([]int, l1)
 	}
-	for i:=0;i<l;i++{ 
+	for i:=0;i<l1;i++{ 
 		row := p[i]
-		for j:=0;j<l;j++{
-			newP[j][l-1-i] = row[j]
+		for j:=0;j<l2;j++{
+			newP[j][l1-1-i] = row[j]
 		}
 	}
 	return newP
 }
 
 func flipX(p [][]int) ([][]int) {
-	l := len(p)
-	newP := make([][]int, l)
-	for k:=0;k<l;k++{
-		newP[k] = make([]int, l)
+	l1 := len(p)
+	l2 := len(p[0])
+	newP := make([][]int, l1)
+	for k:=0;k<l1;k++{
+		newP[k] = make([]int, l2)
 	}
-	for i:=0;i<l;i++{ 
+	for i:=0;i<l1;i++{ 
 		row := p[i]
-		for j:=0;j<l;j++{
-			newP[i][j] = row[l-1-j]
+		for j:=0;j<l2;j++{
+			newP[i][j] = row[l2-1-j]
 		}
 	}
 	return newP
 }
 
 func flipY(p [][]int) ([][]int) {
-	l := len(p)
-	newP := make([][]int, l)
-	for k:=0;k<l;k++{
-		newP[k] = make([]int, l)
+	l1 := len(p)
+	l2 := len(p[0])
+	newP := make([][]int, l1)
+	for k:=0;k<l1;k++{
+		newP[k] = make([]int, l2)
 	}
 
-	for i:=0;i<l;i++{ 
-		for j:=0;j<l;j++{
-			newP[i][j] = p[l-1-i][j]
+	for i:=0;i<l1;i++{ 
+		for j:=0;j<l2;j++{
+			newP[i][j] = p[l1-1-i][j]
 		}
 	}
 	return newP
@@ -126,8 +129,18 @@ func initPiecesMap(data []Piece) map[int]Piece {
 
 func printM(M [][]int) {
 	for _,v := range M {
-		fmt.Println(v)
+		for _,n := range v {
+			if n==1 {
+				fmt.Print("#")
+			} else if n == 2 {
+				fmt.Print("O")
+			} else {
+				fmt.Print(".")
+			}
+		}
+		fmt.Print("\n")
 	}
+	fmt.Print("\n")
 }
 
 func star1(data []string) []Piece{	
@@ -252,18 +265,29 @@ func assemble(pieces map[int]Piece) [][]Piece {
 
 func merge(p1 [][]int, p2 [][]int) [][]int {
 	//a,b,c,d,e,f,g,h := true,true,true,true,true,true,true,true
-	if len(p1) != len(p2) {
-		fmt.Println(p1, p2)
-		panic("mismatch")
+	xyz:=0
+	for len(p1) != len(p2) {
+		p2 = rotate(p2)
+		if xyz>4 {
+			fmt.Println(len(p1), len(p1[0]))
+			printM(rotate(p1))
+			fmt.Println(len(p2), len(p2[0]))
+			printM(p2)
+			panic("mismatch")
+		}
+		xyz++
 	}
 	l:=len(p1)
 	
-	for x:=0;x<2;x++{
-		for y:=0;y<2;y++{
+	for x:=0;x<4;x++{
+		for y:=0;y<4;y++{
 			for b:=0;b<4;b++{
 				for c:=0;c<4;c++{
 					a:=true
 					l1:=len(p1[0])
+					if len(p1) != len(p2) {
+						continue
+					}
 					for i:=0;i<l;i++ {
 						if (p1[i][l1-1] != p2[i][0]) {
 							a=false
@@ -279,21 +303,104 @@ func merge(p1 [][]int, p2 [][]int) [][]int {
 						}
 						return newP
 					}
-					p2 = rotate(p2)
+					p1 = flipX(p1)
 				}
-				p1 = rotate(p1)
+				p1 = flipY(p1)	
 			}
-			p1 = flipY(p1)
+			p1 = rotate(p1)
 		}
-		p1 = flipX(p1)
+		p2 = rotate(p2)
 	}
+	printM(p1)
+	printM(rotate(p1))
+	printM(p2)
 	panic("oh no")
 	return nil
 }
 
+
+func findSeamonsters(img [][]int) int {
+	h:=len(img)
+	l:=len(img[0])
+	rough := 0
+	for _,r := range img {
+		for _,n := range r {
+			rough += n
+		}
+	}
+	//fmt.Println(rough)
+
+	var seamonster [][]int 
+	seamonster = append(seamonster, []int{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0})
+	seamonster = append(seamonster, []int{1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,1})
+	seamonster = append(seamonster, []int{0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0})
+	smh := len(seamonster)
+	sml := len(seamonster[0])
+	smrough:=0
+	printM(seamonster)
+	for _,r := range seamonster {
+		for _,n := range r {
+			smrough += n
+		}
+	}
+	
+	printM(img)
+	fmt.Println(rough, smrough)
+	found := 0
+	for x:=0;x<4;x++{
+		for y:=0;y<4;y++{
+			for z:=0;z<4;z++{
+				fmt.Println(z)
+				printM(img)
+
+				isSm := true
+				for i:=0;i<h-smh;i++ {
+					for j:=0;j<l-sml;j++ {
+						isSm = true
+						for a:=0;a<smh;a++ {
+							for b:=0;b<sml;b++ {
+								if seamonster[a][b] == 1 {
+									fmt.Print(seamonster[a][b], img[i][j], ",")
+									if img[i][j] != 1 {
+										isSm = false
+										break
+									}
+								}
+							}
+							if !isSm {
+								break
+							}
+						}
+						if isSm {
+							printM(seamonster)
+							fmt.Println(i,j, smh, sml)
+							printM(img[i:i+smh])
+							found++
+							i += smh
+							j += sml
+						}
+					}	
+				}
+				if found > 0 {
+					printM(img)
+					fmt.Println(rough, smrough, found)
+					return rough - smrough*found
+				}
+					
+				img = rotate(img)
+			}
+			img = flipX(img)
+		}
+		img = flipY(img)
+	}
+	printM(img)
+	//panic("WTF!")
+	return rough
+}
+
 func makeImage(grid [][]Piece) [][]int {
 	var img [][]int
-	for _,row := range grid {
+	for i,row := range grid {
 		var imgR [][]int
 		for j,p := range row {
 			if j == 0 {
@@ -303,16 +410,19 @@ func makeImage(grid [][]Piece) [][]int {
 			}
 			
 		}
-		imgR = trimPiece2(imgR)
-		printM(imgR)
-		/*
+		/*fmt.Println("Row", i)
+		fmt.Println(len(imgR), len(imgR[0]))
+		imgR = rotate(imgR)
+		fmt.Println(len(imgR), len(imgR[0]))*/
 		if i == 0 {
 			img = imgR
 		} else {
-			imgR = merge(img, imgR)
+			img = merge(img, imgR)
 		}
-		*/
 	}
+	/*img = trimPiece2(img)
+	printM(img)
+	printM(rotate(img))*/
 	return img
 }
 
@@ -320,7 +430,26 @@ func star2(p []Piece) {
 	pm := initPiecesMap(p)
 	a := assemble(pm)
 	img := makeImage(a)
-	fmt.Println("Star 2:", img)
+	img = trimPiece2(img)
+
+	b:= findSeamonsters(img)
+
+	fmt.Println("Star 2:", b)
+	/*for i:=0;i<4;i++ {
+		img = rotate(img)
+		printM(img)
+	}
+	img = flipX(img)
+	for i:=0;i<4;i++ {
+		img = rotate(img)
+		printM(img)
+	}
+	img = flipY(img)
+	for i:=0;i<4;i++ {
+		img = rotate(img)
+		printM(img)
+	}*/
+	//fmt.Println(".#.#..#.##...#.##..#####\n###....#.#....#..#......\n##.##.###.#.#..######...\n###.#####...#.#####.#..#\n##.#....#.##.####...#.##\n...########.#....#####.#\n....#..#...##..#.#.###..\n.####...#..#.....#......\n#..#.##..#..###.#.##....\n#.####..#.####.#.#.###..\n###.#.#...#.######.#..##\n#.####....##..########.#\n##..##.#...#...#.#.#.#..\n...#..#..#.#.##..###.###\n.#.#....#.##.#...###.##.\n###.#...#..#.##.######..\n.#.#.###.##.##.#..#.##..\n.####.###.#...###.#..#.#\n..#.#..#..#.#.#.####.###\n#..####...#.#.#.###.###.\n#####..#####...###....##\n#.##..#..#...#..####...#\n.#.###..##..##..####.##.\n...###...##...#...#..###")
 }
 
 func main() {
