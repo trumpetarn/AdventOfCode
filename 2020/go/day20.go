@@ -318,6 +318,15 @@ func merge(p1 [][]int, p2 [][]int) [][]int {
 	return nil
 }
 
+func lookForSm(a []int, sm []int) bool {
+  for i, v := range sm {
+    if v == 1 && a[i] != 1 {
+      return false
+    }
+  }
+  return true
+}
+
 
 func findSeamonsters(img [][]int) int {
 	h:=len(img)
@@ -337,53 +346,37 @@ func findSeamonsters(img [][]int) int {
 	smh := len(seamonster)
 	sml := len(seamonster[0])
 	smrough:=0
-	printM(seamonster)
+	//printM(seamonster)
 	for _,r := range seamonster {
 		for _,n := range r {
 			smrough += n
 		}
 	}
 	
-	printM(img)
-	fmt.Println(rough, smrough)
+	//printM(img)
+	//fmt.Println(rough, smrough)
 	found := 0
-	for x:=0;x<4;x++{
-		for y:=0;y<4;y++{
+	for x:=0;x<2;x++{
+		for y:=0;y<2;y++{
 			for z:=0;z<4;z++{
-				fmt.Println(z)
-				printM(img)
+				//fmt.Println(z)
+				//printM(img)
 
-				isSm := true
 				for i:=0;i<h-smh;i++ {
 					for j:=0;j<l-sml;j++ {
-						isSm = true
-						for a:=0;a<smh;a++ {
-							for b:=0;b<sml;b++ {
-								if seamonster[a][b] == 1 {
-									fmt.Print(seamonster[a][b], img[i][j], ",")
-									if img[i][j] != 1 {
-										isSm = false
-										break
-									}
+						if lookForSm(img[i][j:j+sml], seamonster[0]) {
+							if lookForSm(img[i+1][j:j+sml], seamonster[1]) {
+								if lookForSm(img[i+2][j:j+sml], seamonster[2]) {
+									found++
+									// remove the pattern?
 								}
 							}
-							if !isSm {
-								break
-							}
-						}
-						if isSm {
-							printM(seamonster)
-							fmt.Println(i,j, smh, sml)
-							printM(img[i:i+smh])
-							found++
-							i += smh
-							j += sml
 						}
 					}	
 				}
 				if found > 0 {
-					printM(img)
-					fmt.Println(rough, smrough, found)
+					//printM(img)
+					//fmt.Println(rough, smrough, found)
 					return rough - smrough*found
 				}
 					
@@ -393,9 +386,9 @@ func findSeamonsters(img [][]int) int {
 		}
 		img = flipY(img)
 	}
-	printM(img)
-	//panic("WTF!")
-	return rough
+	//printM(img)
+	panic("No Seamonster Found")
+	return -1
 }
 
 func makeImage(grid [][]Piece) [][]int {
@@ -453,7 +446,7 @@ func star2(p []Piece) {
 }
 
 func main() {
-	raw, _ := ioutil.ReadFile("../inputs/day20_example.txt")
+	raw, _ := ioutil.ReadFile("../inputs/day20.txt")
 	data := strings.Split(string(raw), "\n\n")
 
 	p := star1(data[:len(data)-1])
