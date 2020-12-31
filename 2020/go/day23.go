@@ -1,14 +1,15 @@
 package main
+
 /*
-Day 23: Crab Cups	
+Day 23: Crab Cups
 
 https://adventofcode.com/2020/day/23
 */
 
 import (
+	"container/list" //TODO: Try ring instead to cleanup?
 	"flag"
 	"fmt"
-	"container/list"
 	//"io/ioutil"
 	//"strings"
 	"strconv"
@@ -16,7 +17,6 @@ import (
 
 var input = flag.String("input", "598162734", "Input")
 var star = flag.Int("star", 0, "Which star to run (0=both)")
-
 
 func printList(l *list.List, i int, pick []int, d int) {
 	fmt.Println("-- Move", i, "--")
@@ -26,7 +26,7 @@ func printList(l *list.List, i int, pick []int, d int) {
 	}
 	fmt.Println("")
 	fmt.Print("Pick Up: ")
-	for _,v := range pick {
+	for _, v := range pick {
 		fmt.Print(v)
 	}
 	fmt.Println("")
@@ -37,7 +37,7 @@ func findValue(l *list.List, le *list.Element, val int) *list.Element {
 	fwd := le.Next()
 	bck := le.Prev()
 	for fwd != le {
-		
+
 		if fwd == nil {
 			fwd = l.Front()
 		}
@@ -61,7 +61,7 @@ func crabCups(data []int, iter int) (*list.List, *list.Element) {
 	cups := list.New()
 	valMap := make(map[int]*list.Element)
 	max := -1
-	for _,v := range data {
+	for _, v := range data {
 		valMap[v] = cups.PushBack(v)
 		if v > max {
 			max = v
@@ -70,17 +70,17 @@ func crabCups(data []int, iter int) (*list.List, *list.Element) {
 	data = data[:1]
 	//printList(cups, 0, nil, 0)
 	current := cups.Front()
-	for i:=0;i<iter;i++ {
-		s := i%1000000
-		if s >= 0 {//s < 5000 || s>995000 {
+	for i := 0; i < iter; i++ {
+		s := i % 1000000
+		if s >= 0 { //s < 5000 || s>995000 {
 			cvalue := current.Value.(int)
-			dvalue := cvalue-1
+			dvalue := cvalue - 1
 			if dvalue < 1 {
 				dvalue = max - dvalue
 			}
 
 			picked := make([]int, 3)
-			for j:=0;j<3;j++ {
+			for j := 0; j < 3; j++ {
 				picks := current.Next()
 				if picks == nil {
 					picks = cups.Front()
@@ -88,8 +88,8 @@ func crabCups(data []int, iter int) (*list.List, *list.Element) {
 				picked[j] = cups.Remove(picks).(int)
 			}
 
-			for k:=0;k<3;k++ {
-				for j:=0;j<3;j++ {
+			for k := 0; k < 3; k++ {
+				for j := 0; j < 3; j++ {
 					if dvalue == picked[j] {
 						dvalue--
 						if dvalue < 1 {
@@ -101,7 +101,7 @@ func crabCups(data []int, iter int) (*list.List, *list.Element) {
 
 			//printList(cups, i+1, picked, dvalue)
 			dest := valMap[dvalue]
-			for _,v := range picked {
+			for _, v := range picked {
 				dest = cups.InsertAfter(v, dest)
 				valMap[v] = dest
 			}
@@ -117,17 +117,17 @@ func crabCups(data []int, iter int) (*list.List, *list.Element) {
 
 func star1(data string) {
 	cups := make([]int, len(data))
-	for i,r := range data {
-		cups[i],_ = strconv.Atoi(string(r))
+	for i, r := range data {
+		cups[i], _ = strconv.Atoi(string(r))
 	}
-	l,a := crabCups(cups, 100)
+	l, a := crabCups(cups, 100)
 	a = a.Next()
 	if a == nil {
 		a = l.Front()
 	}
 
 	ans := ""
-	for a.Value.(int) != 1 { 
+	for a.Value.(int) != 1 {
 		ans += strconv.Itoa(a.Value.(int))
 		a = a.Next()
 		if a == nil {
@@ -139,17 +139,17 @@ func star1(data string) {
 
 func star2(data string) {
 	cups := make([]int, len(data))
-	for i,r := range data {
-		cups[i],_ = strconv.Atoi(string(r))
+	for i, r := range data {
+		cups[i], _ = strconv.Atoi(string(r))
 	}
-	for i:=10;i<=1000000;i++ {
+	for i := 10; i <= 1000000; i++ {
 		cups = append(cups, i)
 	}
-	_,a := crabCups(cups, 10000000)
+	_, a := crabCups(cups, 10000000)
 
 	a = a.Next()
 	res := 1
-	for f:=0;f<2;f++ {
+	for f := 0; f < 2; f++ {
 		res *= a.Value.(int)
 		a = a.Next()
 	}

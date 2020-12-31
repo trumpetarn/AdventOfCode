@@ -1,4 +1,5 @@
 package main
+
 /*
 Day 22: Crab Combat
 
@@ -9,8 +10,8 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-	"strings"
 	"strconv"
+	"strings"
 	//"time"
 )
 
@@ -18,15 +19,15 @@ var input = flag.String("input", "../inputs/day22.txt", "Relative path to input-
 var star = flag.Int("star", 0, "Which star to run (0=both)")
 
 func star1(data []string) {
-	var p1,p2 []int
+	var p1, p2 []int
 	p1d := strings.Split(data[0], "\n")
 	p2d := strings.Split(data[1], "\n")
-	for _,v := range p1d[1:] {
-		n,_ := strconv.Atoi(v)
+	for _, v := range p1d[1:] {
+		n, _ := strconv.Atoi(v)
 		p1 = append(p1, n)
 	}
-	for _,v := range p2d[1:len(p2d)-1] {
-		n,_ := strconv.Atoi(v)
+	for _, v := range p2d[1 : len(p2d)-1] {
+		n, _ := strconv.Atoi(v)
 		p2 = append(p2, n)
 	}
 
@@ -45,14 +46,14 @@ func star1(data []string) {
 		}
 	}
 	var winner []int
-	if len(p1)> 0 {
+	if len(p1) > 0 {
 		winner = p1
 	} else {
 		winner = p2
 	}
 	sum := 0
-	for i,v := range winner {
-		sum += (len(winner)-i)*v
+	for i, v := range winner {
+		sum += (len(winner) - i) * v
 	}
 
 	fmt.Println("Star 1:", sum)
@@ -61,7 +62,7 @@ func equals(a []int, b []int) bool {
 	if len(a) != len(b) {
 		return false
 	}
-	for i,v:=range a {
+	for i, v := range a {
 		if v != b[i] {
 			return false
 		}
@@ -70,7 +71,7 @@ func equals(a []int, b []int) bool {
 }
 
 func inHistory(p []int, phist [][]int) bool {
-	for _,r := range phist {
+	for _, r := range phist {
 		if equals(r, p) {
 			//fmt.Println("Hst")
 			return true
@@ -104,10 +105,10 @@ func recursiveCombat(p1 []int, p2 []int, xy int) (bool, []int, []int) {
 		if a <= len(p1) && b <= len(p2) {
 			p1cpy := make([]int, a)
 			p2cpy := make([]int, b)
-			for i,v := range p1[:a]{
+			for i, v := range p1[:a] {
 				p1cpy[i] = v
 			}
-			for i,v := range p2[:b]{
+			for i, v := range p2[:b] {
 				p2cpy[i] = v
 			}
 			//fmt.Println("Recursion", a, b, p1, p2)
@@ -128,19 +129,19 @@ func recursiveCombat(p1 []int, p2 []int, xy int) (bool, []int, []int) {
 }
 
 func star2(data []string) {
-	var p1,p2,p1x,p2x []int
+	var p1, p2, p1x, p2x []int
 	p1d := strings.Split(data[0], "\n")
 	p2d := strings.Split(data[1], "\n")
-	for _,v := range p1d[1:] {
-		n,_ := strconv.Atoi(v)
+	for _, v := range p1d[1:] {
+		n, _ := strconv.Atoi(v)
 		p1 = append(p1, n)
 	}
-	for _,v := range p2d[1:len(p2d)-1] {
-		n,_ := strconv.Atoi(v)
+	for _, v := range p2d[1 : len(p2d)-1] {
+		n, _ := strconv.Atoi(v)
 		p2 = append(p2, n)
 	}
 	var p1w bool
-	p1w, 	p1x, p2x =recursiveCombat(p1, p2, 1)
+	p1w, p1x, p2x = recursiveCombat(p1, p2, 1)
 	//fmt.Println("P1",p1x)
 	//fmt.Println("P2",p2x)
 
@@ -151,8 +152,8 @@ func star2(data []string) {
 		winner = p2x
 	}
 	sum := 0
-	for i,v := range winner {
-		sum += (len(winner)-i)*v
+	for i, v := range winner {
+		sum += (len(winner) - i) * v
 	}
 
 	fmt.Println("Star 2:", sum)

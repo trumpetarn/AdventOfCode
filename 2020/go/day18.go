@@ -1,4 +1,5 @@
 package main
+
 /*
 Day 18: Operation Order
 
@@ -8,22 +9,22 @@ https://adventofcode.com/2020/day/18
 import (
 	"fmt"
 	"io/ioutil"
-	"strings"
 	"strconv"
+	"strings"
 )
 
 func calc(s string) int {
-	var op,x,y int
+	var op, x, y int
 	first := true
-	s = strings.Replace(s, "(", "",-1)
-	s = strings.Replace(s, ")", "",-1)
+	s = strings.Replace(s, "(", "", -1)
+	s = strings.Replace(s, ")", "", -1)
 	sl := strings.Split(s, " ")
 	//fmt.Println(sl)
-	for _,v := range sl {
-		if len(v) == 0{
+	for _, v := range sl {
+		if len(v) == 0 {
 			continue
 		}
-		switch v{
+		switch v {
 		case "(":
 			continue
 		case ")":
@@ -31,20 +32,20 @@ func calc(s string) int {
 		case " ":
 			continue
 		case "+":
-			op=0
+			op = 0
 		case "*":
-			op=1
+			op = 1
 		default:
 			if first {
-				x,_=strconv.Atoi(v)
+				x, _ = strconv.Atoi(v)
 				first = false
 				//fmt.Println("x",x)
-			}else{
-				y,_=strconv.Atoi(v)
+			} else {
+				y, _ = strconv.Atoi(v)
 				//fmt.Println("y",y)
-				if op==0 {
+				if op == 0 {
 					x += y
-				}else{
+				} else {
 					x *= y
 				}
 			}
@@ -55,77 +56,77 @@ func calc(s string) int {
 }
 
 func calc2(s string) int {
-	var op,x,y int
+	var op, x, y int
 	first := true
-	s = strings.Replace(s, "(", "",-1)
-	s = strings.Replace(s, ")", "",-1)
+	s = strings.Replace(s, "(", "", -1)
+	s = strings.Replace(s, ")", "", -1)
 	sl := strings.Split(s, " ")
 	var next []string
 	//fmt.Println(sl)
-	for _,v := range sl {
-		if len(v) == 0{
+	for _, v := range sl {
+		if len(v) == 0 {
 			continue
 		}
 		next = append(next, v)
-		switch v{
+		switch v {
 		case "+":
-			op=0
+			op = 0
 		case "*":
-			op=1
+			op = 1
 			first = true
 		default:
 			if first {
-				x,_=strconv.Atoi(v)
+				x, _ = strconv.Atoi(v)
 				first = false
 				//fmt.Println("x",x)
-			}else{
-				y,_=strconv.Atoi(v)
+			} else {
+				y, _ = strconv.Atoi(v)
 				//fmt.Println("y",y)
-				if op==0 {
+				if op == 0 {
 					//fmt.Println("pre",next)
-					trim := len(next)-3
+					trim := len(next) - 3
 					if trim >= 0 {
 						next = next[:trim]
 					}
-					x = x+y
+					x = x + y
 					next = append(next, strconv.Itoa(x))
 					//fmt.Println("post",next)
-				}else{
-					
+				} else {
+
 				}
 			}
 			//fmt.Println(x,y)
 		}
 	}
 	//fmt.Println("",next)
-	op=1
+	op = 1
 	first = true
-	x=0
-	y=0
+	x = 0
+	y = 0
 
-	for _,v := range next {
-		if len(v) == 0{
+	for _, v := range next {
+		if len(v) == 0 {
 			continue
 		}
 		//fmt.Println(v,x,y)
-		switch v{
+		switch v {
 		case "+":
 			panic("+")
 		case "*":
-			op=1
+			op = 1
 		default:
 			if first {
-				x,_=strconv.Atoi(v)
+				x, _ = strconv.Atoi(v)
 				first = false
-			}else{
-				y,_=strconv.Atoi(v)
-				if op==1 {
+			} else {
+				y, _ = strconv.Atoi(v)
+				if op == 1 {
 					x *= y
-				}else{
-					
+				} else {
+
 				}
 			}
-			
+
 		}
 	}
 	//fmt.Println("    ",next)
@@ -134,22 +135,22 @@ func calc2(s string) int {
 
 func calcLine(l string, b bool) int {
 	var par []int
-	for i,r := range l {
+	for i, r := range l {
 		//fmt.Println(l)
 		switch r {
 		case '(':
 			par = append(par, i+1)
 		case ')':
-			n := len(par)-1
+			n := len(par) - 1
 			j := par[n]
 			par = par[:n]
 			var v string
 			if b {
 				v = strconv.Itoa(calc2(l[j:i]))
-			}else{
+			} else {
 				v = strconv.Itoa(calc(l[j:i]))
 			}
-			pad := i-j-len(v)
+			pad := i - j - len(v)
 			//tmp := l
 			l = l[:j] + v + strings.Repeat(" ", pad) + l[i:]
 			//fmt.Println("m", l)
@@ -157,7 +158,7 @@ func calcLine(l string, b bool) int {
 			continue
 		}
 	}
-	if b{
+	if b {
 		//fmt.Println("f", l)
 		return calc2(l)
 	}
