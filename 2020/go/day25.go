@@ -9,15 +9,15 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-	"strings"
 	"strconv"
+	"strings"
 )
 
 var input = flag.String("input", "../inputs/day25.txt", "Relative path to input-file")
 
 func star1(ck, dk int) {
 	val := 1
-	subj:= 7
+	subj := 7
 	loopC := 0
 	for val != ck {
 		val *= subj
@@ -35,7 +35,7 @@ func star1(ck, dk int) {
 
 	subj = dk
 	val = 1
-	for i:=0;i<loopC;i++ {
+	for i := 0; i < loopC; i++ {
 		val *= subj
 		val = val % 20201227
 	}
@@ -54,8 +54,8 @@ func main() {
 		panic("Invalid file")
 	}
 	data := strings.Split(string(raw), "\n")
-	cardkey,_ := strconv.Atoi(data[0])
-	doorkey,_ := strconv.Atoi(data[1])
+	cardkey, _ := strconv.Atoi(data[0])
+	doorkey, _ := strconv.Atoi(data[1])
 	star1(cardkey, doorkey)
 	star2()
 }
