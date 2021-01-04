@@ -1,7 +1,7 @@
 # AdventOfCode
 
-My solutions to Advent Of Code
-2017: C and Python
-2018: C++ (Not finished)
-2019: C++ and Python (Not finished)
-2020: Go (Ongoing)
+My solutions to Advent Of Code  
+2017: C and Python (Done)  
+2018: C++ (Ongoing)  
+2019: C++ and Python (Ongoing)  
+2020: Go (Done)  
