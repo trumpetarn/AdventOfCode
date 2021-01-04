@@ -11,27 +11,17 @@ Star 2: Validate the c occours in the index x or y but not both
 import (
 	"fmt"
 	"io/ioutil"
-	"strconv"
 	"strings"
 )
 
-func parseString(s string) (string, string, int, int) {
-	s1 := strings.Split(s, ": ")
-	s2 := strings.Split(s1[0], " ")
-	s3 := strings.Split(s2[0], "-")
-	pass := s1[1]
-	c := s2[1]
-	x, _ := strconv.Atoi(s3[0])
-	y, _ := strconv.Atoi(s3[1])
-	return pass, c, x, y
-}
-
 func star1(data []string) {
 	// x-y c: string
+	var pass, c string
+	var x, y int
 	valid := 0
 	for _, s := range data {
-		pass, c, x, y := parseString(s)
-		n := strings.Count(pass, c)
+		fmt.Sscanf(s, "%d-%d %s %s", &x, &y, &c, &pass)
+		n := strings.Count(pass, c[:1])
 		if x <= n && n <= y {
 			valid++
 		}
@@ -40,9 +30,11 @@ func star1(data []string) {
 }
 
 func star2(data []string) {
+	var pass, c string
+	var x, y int
 	valid := 0
 	for _, s := range data {
-		pass, c, x, y := parseString(s)
+		fmt.Sscanf(s, "%d-%d %s %s", &x, &y, &c, &pass)
 		if (pass[x-1] == c[0] || pass[y-1] == c[0]) && !(pass[x-1] == c[0] && pass[y-1] == c[0]) {
 			valid++
 		}
