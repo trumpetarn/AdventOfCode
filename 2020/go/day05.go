@@ -12,8 +12,10 @@ import (
 	"strings"
 )
 
-const ROWS = 128
-const COLS = 8
+const (
+	ROWS = 128
+	COLS = 8
+)
 
 func newArray(n int) []int {
 	a := make([]int, n)
@@ -88,7 +90,7 @@ func star2(data []string) {
 	}
 	for i, j := range sids[min:max] {
 		if j == 0 {
-			fmt.Println("Star 2:", i+min, "|", min, "-", max)
+			fmt.Println("Star 2:", i+min)
 			break
 		}
 	}
