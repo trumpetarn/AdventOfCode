@@ -1,4 +1,5 @@
 package main
+
 /*
 Day 02: Dive!
 
@@ -10,14 +11,13 @@ import (
 	"fmt"
 	"io/ioutil"
 	"strings"
-	//"strconv"
 )
 
-var inputFile = flag.String("inputFile", "../inputs/day02.txt", "Relative path to input-file")
+var inputFile = flag.String("input", "../inputs/day02.txt", "Relative path to input-file")
 
 type Coord struct {
-	x int
-	y int
+	x   int
+	y   int
 	aim int
 }
 
@@ -25,7 +25,7 @@ func star1(data []string) {
 	var pos Coord
 	var s string
 	var n int
-	for _, instr := range(data) {
+	for _, instr := range data {
 		m, _ := fmt.Sscanf(instr, "%s %d", &s, &n)
 		if m != 2 {
 			break
@@ -48,7 +48,7 @@ func star2(data []string) {
 	var sub Coord
 	var s string
 	var n int
-	for _, instr := range(data) {
+	for _, instr := range data {
 		m, _ := fmt.Sscanf(instr, "%s %d", &s, &n)
 		if m != 2 {
 			break
@@ -60,7 +60,7 @@ func star2(data []string) {
 			sub.aim -= n
 		case "forward":
 			sub.x += n
-			sub.y += n*sub.aim
+			sub.y += n * sub.aim
 		default:
 			continue
 		}
