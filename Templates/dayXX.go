@@ -29,7 +29,8 @@ func main() {
 	if err != nil {
 		panic("Invalid file")
 	}
-	data := strings.Split(string(raw), "\n\n")
+	rawStr := strings.TrimSpace(string(raw))
+	data := strings.Split(rawStr, "\n\n")
 	star1(data)
 	star2(data)
 }
