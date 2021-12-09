@@ -1,9 +1,9 @@
 package main
 
 /*
-Day 07: Title
+Day 07: The Treachery of Whales
 
-https://adventofcode.com/2020/day/7
+https://adventofcode.com/2021/day/7
 */
 
 import (

@@ -3,7 +3,7 @@ package main
 /*
 Day XX: Title
 
-https://adventofcode.com/2020/day/X
+https://adventofcode.com/2021/day/X
 */
 
 import (

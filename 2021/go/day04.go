@@ -3,7 +3,7 @@ package main
 /*
 Day 04: Giant Squid
 
-https://adventofcode.com/2020/day/4
+https://adventofcode.com/2021/day/4
 */
 
 import (

@@ -1,9 +1,9 @@
 package main
 
 /*
-Day 05: Title
+Day 05: Hydrothermal Venture
 
-https://adventofcode.com/2020/day/5
+https://adventofcode.com/2021/day/5
 */
 
 import (

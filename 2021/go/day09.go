@@ -1,9 +1,9 @@
 package main
 
 /*
-Day 09: Title
+Day 09: Smoke Basin
 
-https://adventofcode.com/2020/day/9
+https://adventofcode.com/2021/day/9
 */
 
 import (

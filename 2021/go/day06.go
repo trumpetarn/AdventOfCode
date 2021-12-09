@@ -1,9 +1,9 @@
 package main
 
 /*
-Day 6: Title
+Day 6: Lanternfish
 
-https://adventofcode.com/2020/day/6
+https://adventofcode.com/2021/day/6
 */
 
 import (
