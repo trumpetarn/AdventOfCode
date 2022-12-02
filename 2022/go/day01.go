@@ -1,9 +1,9 @@
 package main
 
 /*
-Day XX: Title
+Day 01: Calorie Counting
 
-https://adventofcode.com/2021/day/X
+https://adventofcode.com/2022/day/1
 */
 
 import (
@@ -11,16 +11,35 @@ import (
 	"fmt"
 	"io/ioutil"
 	"strings"
+	"strconv"
+	"sort"
 )
 
-var inputFile = flag.String("input", "../inputs/dayXX.txt", "Relative path to input-file")
+var inputFile = flag.String("input", "../inputs/day01.txt", "Relative path to input-file")
 
-func star1(data []string) {
-	fmt.Println("Star 1:", data[0])
+func sum(sl []int) int {
+	sum := 0
+	for _, n := range sl {
+		sum += n
+	}
+	return sum
 }
 
-func star2(data []string) {
-	fmt.Println("Star 2:", data[0])
+func star1o2(data []string) {
+	var sums []int
+	for _, ln := range data {
+		sum := 0
+		split := strings.Split(ln, "\n")
+		for _, n := range split {
+			x, _ := strconv.Atoi(n)
+			sum += x
+		}
+		fmt.Println(sum)
+		sums = append(sums, sum)
+	}
+	sort.Ints(sums)
+	fmt.Println("Star 1:", sums[len(sums)-1])
+	fmt.Println("Star 2:", sum(sums[len(sums)-3:len(sums)]))
 }
 
 func main() {
@@ -31,6 +50,6 @@ func main() {
 	}
 	rawStr := strings.TrimSpace(string(raw))
 	data := strings.Split(rawStr, "\n\n")
-	star1(data)
-	star2(data)
+	fmt.Println(data)
+	star1o2(data)
 }
