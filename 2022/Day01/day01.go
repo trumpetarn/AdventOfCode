@@ -10,9 +10,9 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-	"strings"
-	"strconv"
 	"sort"
+	"strconv"
+	"strings"
 )
 
 var inputFile = flag.String("input", "../inputs/day01.txt", "Relative path to input-file")
