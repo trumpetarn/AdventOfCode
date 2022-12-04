@@ -165,10 +165,11 @@ if not os.path.exists(y):
     print("Creating", y)
     if not args.dry_run:
         os.mkdir(y)
+
 if not os.path.exists(loc):
     print("Creating:", loc)
     if not args.dry_run:
-        os.mkdir(y)
+        os.mkdir(loc)
 
 if args.lang == "go":
     filename = "day{:02d}.go".format(args.day)
