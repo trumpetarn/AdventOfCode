@@ -14,27 +14,34 @@
     )
 
     var inputFile = flag.String("input", "../inputs/day07.txt", "Relative path to input-file")
-    
     type Node struct {
         name string
         size int
+        childs []Node
         parent *Node
+    }
+    type Data struct {
+        name string
+        size int
     }
 
     func generateTree(data []string) {
-        pos := Node{"/", 0, nil}
+        root := Node{"/", 0, make([]Node, 0), nil}
+        currentPos := &root
+        pos := "/"
+        test := make(map[string][]Data)
         for _,ln := range data {
             if ln[0] == '$' {
                 var cmd, dest string
                 fmt.Sscanf(ln, "$ %s %s", &cmd, &dest)
                 if cmd == "cd" {
                     if dest == ".." {
-                        size := pos.size
-                        pos = *pos.parent
-                        pos.size += size
+                        currentPos = currentPos.parent
                     } else {
-                        new := Node{dest, 0, &pos}
-                        pos = new
+                        newFolder := Node{dest, 0, make([]Node, 0), currentPos}
+                        currentPos.childs = append(currentPos.childs, newFolder)
+                        currentPos = &newFolder
+                        pos = dest
                     } 
                 } else if cmd == "ls" {
                     // Do nothing
@@ -43,14 +50,18 @@
                 lsOut := strings.Split(ln, " ")
                 // List
                 if lsOut[0] == "dir" {
-
+                    test[pos] = append(test[pos], Data{lsOut[1], 0})
                 } else {
                     size,_ := strconv.Atoi(lsOut[0])
-                    pos.size += size
+                    newFile := Node{lsOut[1], size, make([]Node, 0), currentPos}
+                    currentPos.childs = append(currentPos.childs, newFile)
+                    test[pos] = append(test[pos], Data{lsOut[1], size})
                 }
             }
+            // fmt.Println(currentPos)
         }
-        fmt.Println(pos)
+        fmt.Println(currentPos.parent)
+        fmt.Println(test)
     }
 
     func star1(data []string) {
