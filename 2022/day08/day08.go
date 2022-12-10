@@ -72,15 +72,15 @@ func findVisible(data [][]int) int {
 	for i, row := range data {
 		for j, y := range row {
 			col := getCol(data, j)
-			fmt.Print(y)
+			//fmt.Print(y)
 			if isVisible(y, row, col, i, j) {
-				fmt.Print("* ")
+				//fmt.Print("* ")
 				test++
 			} else {
-				fmt.Print("  ")
+				//fmt.Print("  ")
 			}
 		}
-		fmt.Println("")
+		//fmt.Println("")
 	}
 	return test
 }
@@ -89,8 +89,52 @@ func star1(data [][]int) {
 	fmt.Println("Star 1:", findVisible(data))
 }
 
+func computeScenicScore(val int, row, col []int, i, j int) int {
+	var left, right, top, bottom int
+	//left
+	for x := j - 1; x >= 0; x-- {
+		left++
+		if row[x] >= val {
+			break
+		}
+	}
+	//right
+	for y := j + 1; y < len(row); y++ {
+		right++
+		if row[y] >= val {
+			break
+		}
+	}
+	//top
+	for z := i - 1; z >= 0; z-- {
+		top++
+		if col[z] >= val {
+			break
+		}
+	}
+	//right
+	for q := i + 1; q < len(col); q++ {
+		bottom++
+		if col[q] >= val {
+			break
+		}
+	}
+	//fmt.Println(i, j, left*right*top*bottom, ":", top, left, bottom, right)
+	return left * right * top * bottom
+}
+
 func star2(data [][]int) {
-	fmt.Println("Star 2:", data[0])
+	maxCs := 0
+	for i, row := range data {
+		for j, val := range row {
+			col := getCol(data, j)
+			cs := computeScenicScore(val, row, col, i, j)
+			if cs > maxCs {
+				maxCs = cs
+			}
+		}
+	}
+	fmt.Println("Star 2:", maxCs)
 }
 
 func main() {
@@ -102,7 +146,6 @@ func main() {
 	rawStr := strings.TrimSpace(string(raw))
 	data := strings.Split(rawStr, "\n")
 	m := inputToMatrix(data)
-	fmt.Println(m)
 	star1(m)
 	star2(m)
 }
