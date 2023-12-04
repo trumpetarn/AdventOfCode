@@ -85,13 +85,13 @@ func star2(data []string) {
 			}
 
 			for j := 1; j < len(rope); j++ {
-				if rope[j-1].x+2 == rope[j].x && rope[j-1].y == rope[j].y {
+				if rope[j-1].x > rope[j].x+1 && rope[j-1].y == rope[j].y {
 					rope[j].x++
-				} else if rope[j-1].x-2 == rope[j].x && rope[j-1].y == rope[j].y {
+				} else if rope[j-1].x < rope[j].x-1 && rope[j-1].y == rope[j].y {
 					rope[j].x--
-				} else if rope[j-1].y+2 == rope[j].y && rope[j-1].x == rope[j].x {
+				} else if rope[j-1].y > rope[j].y+1 && rope[j-1].x == rope[j].x {
 					rope[j].y++
-				} else if rope[j-1].y-2 == rope[j].y && rope[j-1].x == rope[j].x {
+				} else if rope[j-1].y < rope[j].y-1 && rope[j-1].x == rope[j].x {
 					rope[j].y--
 				} else if !isAdjacent(rope[j], rope[j-1]) {
 					//diagonal
