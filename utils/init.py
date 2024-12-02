@@ -49,23 +49,23 @@ def generate_gofile(day, year):
 
 def generate_pyfile(day, year):
     body = """
-    \"\"\"
-    Day {d:02d}: https://adventofcode.com/{y}/day/{d}
-    \"\"\"
-    from __future__ import print_function
+\"\"\"
+Day {d:02d}: https://adventofcode.com/{y}/day/{d}
+\"\"\"
 
-    def star1(file):
-        return file
+def star1(file):
+    return file
 
-    def star2(file):
-        return file
+def star2(file):
+    return file
 
-    def main():
-        day{d}input = open("/repo/AdventOfCode/{y}/inputs/day{d:02d}.txt", 'r')
-        ans1 = star1(day{d}input)
-        ans2 = star2(day{d}input)
-        print("Star 1:", ans1)
-        print("Star 2:", ans2)
+def __main__():
+    day{d}input = open("/repo/AdventOfCode/{y}/inputs/day{d:02d}.txt", 'r')
+    ans1 = star1(day{d}input)
+    ans2 = star2(day{d}input)
+    print("Star 1:", ans1)
+    print("Star 2:", ans2)
+__main__()
     """.format(d=day, y=year)
     return body
 
