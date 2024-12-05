@@ -1,20 +1,30 @@
 """
-Day XX: Title
-
-Some description
+Day XX
 """
 
-from __future__ import print_function
+from typing import List, Tuple, Dict, Set, Optional
 
-def star1(file):
-	return file
 
-def star2(file):
-	return file
+def parse_input(file_path: str = "inputs/dayXX.txt") -> List[str]:
+    f = open(file_path, "r")
+    return [line.strip().split("\n") for line in f]
+
+
+def star1(input):
+    return input
+
+
+def star2(input):
+    return input
+
 
 def main():
-	dayXXinput = open("/repo/AdventOfCode/2019/inputs/day01.txt", 'r')
-	ans1 = star1(dayXXinput)
-	ans2 = star2(dayXXinput)
-	print("Star 1:", ans1)
-	print("Star 2:", ans2)
+    input = parse_input()
+    ans1 = star1(input)
+    ans2 = star2(input)
+    print("Star 1:", ans1)
+    print("Star 2:", ans2)
+
+
+if __name__ == "__main__":
+    main()
