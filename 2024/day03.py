@@ -21,18 +21,18 @@ def star1(input: str) -> str:
 
 
 def star2(input):
-	multis = re.findall("mul\((\d+),(\d+)\)|(do\(\))|(don't\(\))", input)
-	ans = 0
-	do = True
-	for tuple in multis:
+    multis = re.findall("mul\((\d+),(\d+)\)|(do\(\))|(don't\(\))", input)
+    ans = 0
+    do = True
+    for tuple in multis:
 
-			if tuple[2] != "":
-					do = True
-			elif tuple[3] != "":
-					do = False
-			elif do:
-					ans += int(tuple[0]) * int(tuple[1])
-	return ans
+        if tuple[2] != "":
+            do = True
+        elif tuple[3] != "":
+            do = False
+        elif do:
+            ans += int(tuple[0]) * int(tuple[1])
+    return ans
 
 
 def main():
