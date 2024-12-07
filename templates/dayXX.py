@@ -3,11 +3,12 @@ Day XX
 """
 
 from typing import List, Tuple, Dict, Set, Optional
+from pathlib import Path
 
 
 def read_input(file_path: str = "inputs/dayXX.txt") -> List[str]:
-    f = open(file_path, "r")
-    return [line.strip().split("\n") for line in f]
+    f = Path(file_path).read_text().strip().split("\n")
+    return f
 
 
 def star1(input):
