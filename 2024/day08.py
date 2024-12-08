@@ -4,6 +4,7 @@ Day 08
 
 from typing import List, Tuple, Dict, Set, Optional
 from pathlib import Path
+import time
 
 
 def read_input(file_path: str = "inputs/day08.txt") -> List[str]:
@@ -78,7 +79,7 @@ def star1(antennas, R, C):
     for key in antennas:
         all_antennas.update(antennas[key])
         antinodes.update(find_antinodes(antennas[key], R, C))
-    fancy_print(antennas, antinodes, R, C)
+    # fancy_print(antennas, antinodes, R, C)
     return len(antinodes)
 
 
@@ -88,7 +89,7 @@ def star2(antennas, R, C):
     for key in antennas:
         all_antennas.update(antennas[key])
         antinodes.update(find_resonant_antinodes(antennas[key], R, C))
-    fancy_print(antennas, antinodes, R, C)
+    # fancy_print(antennas, antinodes, R, C)
     return len(antinodes)
 
 
