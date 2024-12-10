@@ -22,7 +22,6 @@ def read_inputy() -> List[str]:
 def star1(input):
     data = []
     id = 0
-
     for i, c in enumerate(input):
         if i % 2 == 0:
             data += [id] * int(c)
