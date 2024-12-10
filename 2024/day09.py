@@ -46,25 +46,35 @@ def star1(input):
 
 
 def star2(input):
-    data = {}
-    id = 0
-    free = {}
+    ints = [int(v) for v in input]
+    data = []
+    free = []
     pos = 0
-    for i, c in enumerate(input):
-        N = int(c)
+    id = 0
+    for i, length in enumerate(ints):
         if i % 2 == 0:
-            data[id] = N
+            data.append((pos, length, id))
             id += 1
-            pos += N
         else:
-            free[pos] = N
-            pos += N
-    print(free)
-    return data
+            free.append((pos, length))
+        pos += length
+    for i, (data_pos, data_len, id) in reversed(list(enumerate(data))):
+        for j, (free_pos, free_len) in enumerate(free):
+            if free_pos < data_pos and free_len >= data_len:
+                data[i] = (free_pos, data_len, id)
+                free[j] = (
+                    free_pos + data_len,
+                    free_len - data_len,
+                )
+                break
+    checksum = 0
+    for i, (pos, length, id) in enumerate(data):
+        checksum += sum([v * id for v in range(pos, pos + length)])
+    return checksum
 
 
 def main():
-    input = read_inputx()
+    input = read_input()
     ans1 = star1(input)
     ans2 = star2(input)
     print("Star 1:", ans1)
