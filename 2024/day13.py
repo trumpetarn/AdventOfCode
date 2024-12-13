@@ -25,34 +25,6 @@ def read_input(file_path: str = "inputs/day13.txt") -> List[List[int]]:
         l += [(a, b, p)]
     return l
 
-# def find_sums(a, b, sum, max_press=100):
-# sums = []
-# a_x, a_y = a
-# b_x, b_y = b
-# sum_x, sum_y = sum
-# for i in range(max_press):
-#    for j in range(max_press):
-#         if a_x * i + b_x * j == sum_x and a_y * i + b_y * j == sum_y:
-#              sums.append((i, j))
-#               break
-#            if a_x * i + b_x * j > sum_x or a_y * i + b_y * j > sum_y:
-#               break
-#    return sums
-#
-#
-# Archived for historical purposes
-# def star1(input):
-#    tokens = 0
-#    for v in input:
-#        s = find_sums(v[0], v[1], v[2])
-#        # This is an ugly way to handle if any sum has more than one combination
-#        if len(s) > 1:
-#            print("not a problem")
-#            sum.sort(key=lambda tup: tup[0])
-#        for sum in s:
-#            tokens += sum[0] * 3 + sum[1]
-#    return tokens
-
 
 def solver(input, error=0):
     tokens = 0
