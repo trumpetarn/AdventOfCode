@@ -1,12 +1,12 @@
 """
-Day XX
+$title_comment
 """
 
 from typing import List, Tuple, Dict, Set, Optional
 from pathlib import Path
 
 
-def read_input(file_path: str = "inputs/dayXX.in") -> List[str]:
+def read_input(file_path: str = "$input_file") -> List[str]:
     f = Path(file_path).read_text().strip().split("\n")
     return f
 

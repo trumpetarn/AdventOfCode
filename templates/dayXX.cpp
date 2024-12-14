@@ -12,6 +12,9 @@
 #include <iterator>
 #include <list>
 
+/*
+$title_comment
+*/
 using namespace std;
 namespace day03
 {
@@ -32,7 +35,7 @@ namespace day03
 
 	int main()
 	{
-		string loc = "../inputs/dayXX.in";
+		string loc = "$input_file";
 		if (argc >= 2)
 			loc = argv[1];
 
