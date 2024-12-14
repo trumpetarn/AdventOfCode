@@ -3,3 +3,6 @@
 *.out
 *.pyc
 *.gch
+
+# ignore inputs
+*.in
