@@ -13,29 +13,30 @@
 #include <list>
 
 using namespace std;
-namespace day03{
-vector<string> read_input(string loc)
+namespace day03
 {
-	vector<string> in;
-	string line;
-	ifstream infile (loc);
-	if (infile.is_open())
+	vector<string> read_input(string loc)
 	{
-		while (getline(infile,line))
+		vector<string> in;
+		string line;
+		ifstream infile(loc);
+		if (infile.is_open())
 		{
-			in.push_back(line);
+			while (getline(infile, line))
+			{
+				in.push_back(line);
+			}
 		}
+		return in;
 	}
-	return in;
-}
 
-int main()
-{
-	string loc = "../inputs/dayXX.txt";
-	if (argc >= 2)
-		loc = argv[1];
+	int main()
+	{
+		string loc = "../inputs/dayXX.in";
+		if (argc >= 2)
+			loc = argv[1];
 
-	vector<string> in = read_input(loc);
-	return 0;
-}
+		vector<string> in = read_input(loc);
+		return 0;
+	}
 }

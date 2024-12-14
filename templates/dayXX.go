@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 
-var inputFile = flag.String("input", "../inputs/dayXX.txt", "Relative path to input-file")
+var inputFile = flag.String("input", "../inputs/dayXX.in", "Relative path to input-file")
 
 func star1(data []string) {
 	fmt.Println("Star 1:", data[0])
