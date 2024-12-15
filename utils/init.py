@@ -72,6 +72,8 @@ def main():
 
     y = "./{}".format(args.year)
     loc = "{}/day{:02d}/".format(y, args.day)
+    if args.lang == "py":
+        loc = "{}/".format(y)
     file = ""
     substitutes = {
         "title_comment": "Day {:02d}\n\nhttps://adventofcode.com/{}/day/{}".format(
