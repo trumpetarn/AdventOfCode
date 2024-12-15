@@ -6,9 +6,10 @@ https://adventofcode.com/2024/day/15
 
 from typing import List, Tuple, Dict, Set, Optional
 from pathlib import Path
+from collections import deque
 
 
-def read_input(file_path: str = "./inputs/day15.example") -> List[str]:
+def read_input(file_path: str = "./inputs/day15.in") -> List[str]:
     f = Path(file_path).read_text().strip().split("\n\n")
     return f
 
@@ -119,7 +120,7 @@ def star1(input):
             s += c
             if c == "O":
                 sum += 100 * i + j
-        print(s)
+        # print(s)
 
     return sum
 
@@ -127,64 +128,48 @@ def star1(input):
 def star2(input):
     maze, ins, robot = parse_input2(input)
     pos_x, pos_y = robot
-    R = len(maze)
-    C = len(maze[0])
-
-    for i, r in enumerate(maze):
-        s = ""
-        for j, c in enumerate(r):
-            s += c
-        print(s)
 
     for ix, iy in ins:
-        move = False
         new_x = pos_x + ix
         new_y = pos_y + iy
-        if maze[new_y][new_x] == ".":
-            move = True
-        elif maze[new_y][new_x] == "#":
-            pass
-        else:
-            x = new_x
-            y = new_y
-            while maze[y][x] != "#":
-                x += ix
-                y += iy
-                if maze[y][x] == ".":
-                    move = True
-                    break
-
+        to_move = set()
+        to_move.add((pos_x, pos_y, "@"))
+        to_check = [(new_x, new_y)]
+        move = True
+        while len(to_check) > 0:
+            x, y = to_check.pop()
+            obj = maze[y][x]
+            if (x, y, obj) in to_move or obj == ".":
+                pass
+            elif obj == "[":
+                to_move.add((x, y, obj))
+                to_check.append((x + ix, y + iy))
+                to_check.append((x + 1, y))
+            elif obj == "]":
+                to_move.add((x, y, obj))
+                to_check.append((x + ix, y + iy))
+                to_check.append((x - 1, y))
+            elif obj == "#":
+                move = False
+                break
         if move:
             maze[pos_y][pos_x] = "."
-            obj = maze[new_y][new_x]
-            maze[new_y][new_x] = "@"
             pos_x = new_x
             pos_y = new_y
-            pos_to_update = set()
-            x = new_x
-            y = new_y
-            while obj == "[" or obj == "]":
-                if obj == "[":
-                    pos_to_update.add((x, y, "["))
-                    pos_to_update.add((x + 1, y, "]"))
-                else:
-                    pos_to_update.add((x, y, "]"))
-                    pos_to_update.add((x - 1, y, "["))
-                x += ix
-                y += iy
-                obj = maze[y][x]
-            for x, y, c in pos_to_update:
+            for x, y, c in to_move:
                 maze[y][x] = "."
+            for x, y, c in to_move:
                 maze[y + iy][x + ix] = c
+            maze[pos_y][pos_x] = "@"
+
     sum = 0
     for i, r in enumerate(maze):
         s = ""
         for j, c in enumerate(r):
             s += c
-            if c == "O":
+            if c == "[":
                 sum += 100 * i + j
-        print(s)
-
+        # print(s)
     return sum
 
 
