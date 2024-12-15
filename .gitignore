@@ -6,3 +6,6 @@
 
 # ignore inputs
 *.in
+
+# ignore vscode
+.vscode/
