@@ -7,113 +7,10 @@ from string import Template
 from pathlib import Path
 
 
-def generate_gofile(day, year):
-    top_comment = """
-    package main
-
-    /*
-    Day {:02d}: https://adventofcode.com/{}/day/{}
-    */
-
-    import (
-        "flag"
-        "fmt"
-        "io/ioutil"
-        "strings"
-    )
-
-    var inputFile = flag.String("input", "../inputs/day{:02d}.txt", "Relative path to input-file")
-    """.format(
-        day, year, day, day
-    )
-
-    body = """
-    func star1(data []string) {
-        fmt.Println("Star 1:", data[0])
-    }
-
-    func star2(data []string) {
-        fmt.Println("Star 2:", data[0])
-    }
-
-    func main() {
-        flag.Parse()
-        raw, err := ioutil.ReadFile(*inputFile)
-        if err != nil {
-            panic("Invalid file")
-        }
-        rawStr := strings.TrimSpace(string(raw))
-        data := strings.Split(rawStr, "\\n\\n")
-        star1(data)
-        star2(data)
-    }
-    """
-    return top_comment + body
-
-
 def generate(s, temp_file):
     f = Path(temp_file).read_text()
     temp = Template(f)
     return temp.substitute(s)
-
-
-def generate_cppfile(day, year):
-    p1 = """
-    #include <iostream>
-    #include <fstream>
-    #include <sstream>
-    #include <cstdint>
-    #include <string>
-    #include <vector>
-    #include <algorithm>
-    #include <map>
-    #include <set>
-    #include <numeric>
-    #include <unistd.h>
-    #include <iterator>
-    #include <list>
-
-    /* Day {d:02d}: https://adventofcode.com/{y}/day/{d} */
-    
-    using namespace std;
-    namespace day{d:02d}""".format(
-        d=day, y=year
-    )
-    p2 = """
-    {
-    vector<string> read_input(string loc)
-    {
-        vector<string> in;
-        string line;
-        ifstream infile (loc);
-        if (infile.is_open())
-        {
-            while (getline(infile,line))
-            {
-                in.push_back(line);
-            }
-        }
-        return in;
-    }
-
-    int main()
-    {
-    """
-    p3 = """
-        string loc = "../inputs/day{d:02d}.txt";
-    """.format(
-        d=day
-    )
-    p4 = """
-        if (argc >= 2)
-            loc = argv[1];
-
-        vector<string> in = read_input(loc);
-        return 0;
-    }
-    }
-    """
-    return p1 + p2 + p3 + p4
 
 
 def generate_cfile(day, year):
@@ -177,7 +74,7 @@ def main():
     loc = "{}/day{:02d}/".format(y, args.day)
     file = ""
     substitutes = {
-        "title_comment": "Day {:02d}\n\nhttps://adventofcode.com/{}/day{}".format(
+        "title_comment": "Day {:02d}\n\nhttps://adventofcode.com/{}/day/{}".format(
             args.day, args.year, args.day
         ),
         "input_file": "./inputs/day{:02d}.in".format(args.day),
@@ -199,7 +96,7 @@ def main():
         filename = "day{:02d}.go".format(args.day)
         if not os.path.exists(loc + filename):
             print("Create", loc + filename)
-            file = generate_gofile(args.day, args.year)
+            file = generate(substitutes, "./templates/dayXX.go")
             if not args.dry_run:
                 f = open(loc + filename, "w+")
                 f.write(file)

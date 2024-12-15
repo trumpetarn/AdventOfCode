@@ -1,9 +1,7 @@
 package main
 
 /*
-Day XX: Title
-
-https://adventofcode.com/2022/day/X
+$title_comment
 */
 
 import (
@@ -13,7 +11,7 @@ import (
 	"strings"
 )
 
-var inputFile = flag.String("input", "../inputs/dayXX.in", "Relative path to input-file")
+var inputFile = flag.String("input", ".$input_file", "Relative path to input-file")
 
 func star1(data []string) {
 	fmt.Println("Star 1:", data[0])
