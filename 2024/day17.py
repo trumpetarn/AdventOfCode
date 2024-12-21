@@ -7,14 +7,14 @@ https://adventofcode.com/2024/day/17
 from typing import List, Tuple, Dict, Set, Optional
 from pathlib import Path
 import re
-
+import copy
 
 def read_input(file_path: str = "./inputs/day17.in") -> List[str]:
     f = Path(file_path).read_text().strip().split("\n\n")
     return f
 
 
-def computer(registers, program, match=[]):
+def computer(registers, program):
     ip = 0
     output = []
     A = registers[0]
@@ -69,12 +69,6 @@ def computer(registers, program, match=[]):
             case 7:
                 registers[2] = registers[0] // (2**combo)
                 ip += 2
-        if len(match) > 0 and output != match[:len(output)]:
-            # print("Failed", output, match[:len(output)])
-            return False
-    if len(match) > 0:
-        print(A, output)
-        return len(output) == len(match)
     return output
 
 
@@ -89,7 +83,7 @@ def star1(input):
     out = computer(registers[:], program)
     return ",".join(map(str, out))
 
-
+# Assuming that we can build register A (0) backwards in steps of 8
 def star2(input):
     regs = input[0].split("\n")
     registers = []
@@ -98,13 +92,24 @@ def star2(input):
         registers.append(int(a[0]))
     b = re.findall("\d+", input[1])
     program = [int(d) for d in b]
-    registers[0] = 0
-    while not computer(registers[:], program, program[:]):
-        registers[0] += 1
-        if registers[0] % 1000 == 0:
-            print(registers[0])
-    return registers[0], computer(registers[:], program)
-
+    result = copy.deepcopy(program)
+    out = []
+    A = 0
+    j = -1
+    while len(out) < len(program):
+        for i in range(0, 8):        
+            out = computer([A+i, 0, 0], program)
+            if out == result[j:]:
+                j -= 1
+                A = (A+i) << 3
+                break
+        else: # If no match, go back to the previous value of A plus 1
+            A >>= 3
+            A += 1
+            j += 1
+            if j == 0:
+                break
+    return A >> 3 # to compensate for the last increment
 
 def main():
     input = read_input()
