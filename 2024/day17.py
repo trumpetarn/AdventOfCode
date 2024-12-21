@@ -14,10 +14,10 @@ def read_input(file_path: str = "./inputs/day17.in") -> List[str]:
     return f
 
 
-def computer(registers, program):
+def computer(registers, program, match=[]):
     ip = 0
     output = []
-
+    A = registers[0]
     while ip < len(program):
         opcode = program[ip]
         operand = program[ip + 1]
@@ -69,6 +69,12 @@ def computer(registers, program):
             case 7:
                 registers[2] = registers[0] // (2**combo)
                 ip += 2
+        if len(match) > 0 and output != match[:len(output)]:
+            # print("Failed", output, match[:len(output)])
+            return False
+    if len(match) > 0:
+        print(A, output)
+        return len(output) == len(match)
     return output
 
 
@@ -85,7 +91,19 @@ def star1(input):
 
 
 def star2(input):
-    return 0
+    regs = input[0].split("\n")
+    registers = []
+    for l in regs:
+        a = re.findall("\d+", l)
+        registers.append(int(a[0]))
+    b = re.findall("\d+", input[1])
+    program = [int(d) for d in b]
+    registers[0] = 0
+    while not computer(registers[:], program, program[:]):
+        registers[0] += 1
+        if registers[0] % 1000 == 0:
+            print(registers[0])
+    return registers[0], computer(registers[:], program)
 
 
 def main():
