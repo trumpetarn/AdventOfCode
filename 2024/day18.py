@@ -48,7 +48,7 @@ def star2(input):
     MIN = BYTES
     i = MIN
     # Divide and conquer to find when the path becomes blocked
-    while MIN+1 < MAX:
+    while MAX-MIN > 1:
         res = dijkstra(START, GOAL, input[:i])
         if res is None:
             MAX = i
@@ -61,9 +61,9 @@ def star2(input):
 def main():
     input = read_input()
     ans1 = star1(input)
-    ans2 = star2(input)
+    x,y = star2(input)
     print("Star 1:", ans1)
-    print("Star 2:", ans2)
+    print("Star 2: %d,%d" % (x,y))
 
 
 if __name__ == "__main__":
