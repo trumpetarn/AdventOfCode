@@ -8,7 +8,7 @@ from typing import List, Tuple, Dict, Set, Optional
 from pathlib import Path
 
 
-def read_input(file_path: str = "./inputs/day19.example") -> List[str]:
+def read_input(file_path: str = "./inputs/day19.in") -> List[str]:
     f = Path(file_path).read_text().strip().split("\n\n")
     return f
 
@@ -34,22 +34,21 @@ def is_possible(patterns, design):
         current = "".join(s)
     return True
 
-def get_number_of_matches(patterns, design): 
-    current_solutions = []
-    ps = patterns.split(", ")
-    for p in ps:
-        if p == design[:len(p)]:
-            current_solutions.append(p)
-    n=0
-    while len(current_solutions) > 0:
-        for i,s in enumerate(current_solutions):
-            if current_solutions.pop(i) == design:
-                n+=1
-            for p in ps:
-                next = s+p
-                if len(next) <= len(design) and next == design[:len(next)]:
-                    current_solutions.append(next)
-    return n
+def get_number_of_matches(patterns, design):
+    patterns = patterns.split(", ")
+    already_matched = {}
+    def match_pattern(pattern):
+        if pattern == "":
+            return 1
+        if pattern in already_matched:
+            return already_matched[pattern]
+        matches = 0
+        for p in patterns:
+            if pattern.startswith(p):
+                matches += match_pattern(pattern[len(p):])
+        already_matched[pattern] = matches
+        return matches
+    return match_pattern(design)
 
         
 def star1(patterns, designs):
@@ -65,7 +64,6 @@ def star2(patterns, designs):
     for d in designs.split("\n"):
         if is_possible(patterns, d):
             m = get_number_of_matches(patterns, d)
-            print(m)
             n += m
     return n
 
