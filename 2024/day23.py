@@ -31,8 +31,15 @@ def star1(input):
                         triples.append(next)
     return len(triples)
 
+import networkx as nx
 def star2():
-    return 0
+    G = nx.Graph()
+    for k, v in graph.items():
+        for node in v:
+            G.add_edge(k, node)
+    clqs = nx.find_cliques(G)
+    l = max(clqs, key=len)
+    return ",".join(sorted(l))
 
 
 def main():
