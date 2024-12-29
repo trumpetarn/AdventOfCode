@@ -12,6 +12,7 @@ def read_input(file_path: str = "./inputs/day19.in") -> List[str]:
     f = Path(file_path).read_text().strip().split("\n\n")
     return f
 
+
 def is_possible(patterns, design):
     s = []
     ps = patterns.split(", ")
@@ -20,7 +21,7 @@ def is_possible(patterns, design):
     current = ""
     while current != design:
         for p in ps:
-            if p == design[matched:matched+len(p)] and (current + p) not in bad:
+            if p == design[matched : matched + len(p)] and (current + p) not in bad:
                 matched += len(p)
                 s.append(p)
                 break
@@ -34,9 +35,11 @@ def is_possible(patterns, design):
         current = "".join(s)
     return True
 
+
 def get_number_of_matches(patterns, design):
     patterns = patterns.split(", ")
     already_matched = {}
+
     def match_pattern(pattern):
         if pattern == "":
             return 1
@@ -45,12 +48,13 @@ def get_number_of_matches(patterns, design):
         matches = 0
         for p in patterns:
             if pattern.startswith(p):
-                matches += match_pattern(pattern[len(p):])
+                matches += match_pattern(pattern[len(p) :])
         already_matched[pattern] = matches
         return matches
+
     return match_pattern(design)
 
-        
+
 def star1(patterns, designs):
     n = 0
     for d in designs.split("\n"):

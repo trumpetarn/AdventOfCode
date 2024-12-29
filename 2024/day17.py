@@ -9,6 +9,7 @@ from pathlib import Path
 import re
 import copy
 
+
 def read_input(file_path: str = "./inputs/day17.in") -> List[str]:
     f = Path(file_path).read_text().strip().split("\n\n")
     return f
@@ -83,6 +84,7 @@ def star1(input):
     out = computer(registers[:], program)
     return ",".join(map(str, out))
 
+
 # Assuming that we can build register A (0) backwards in steps of 8
 def star2(input):
     regs = input[0].split("\n")
@@ -97,19 +99,20 @@ def star2(input):
     A = 0
     j = -1
     while len(out) < len(program):
-        for i in range(0, 8):        
-            out = computer([A+i, 0, 0], program)
+        for i in range(0, 8):
+            out = computer([A + i, 0, 0], program)
             if out == result[j:]:
                 j -= 1
-                A = (A+i) << 3
+                A = (A + i) << 3
                 break
-        else: # If no match, go back to the previous value of A plus 1
+        else:  # If no match, go back to the previous value of A plus 1
             A >>= 3
             A += 1
             j += 1
             if j == 0:
                 break
-    return A >> 3 # to compensate for the last increment
+    return A >> 3  # to compensate for the last increment
+
 
 def main():
     input = read_input()

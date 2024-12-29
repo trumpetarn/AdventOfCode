@@ -17,14 +17,13 @@ def star1(input):
     keys = []
     locks = []
     for schema in input:
+        key, lock = [], []
         # Transpose the schema to get the columns
-        key = []
-        lock = []
         for l in list(map(list, zip(*schema.split("\n")))):
             if schema[0] == "#":
-                key.append(l.count("#")-1)
+                key.append(l.count("#") - 1)
             else:
-                lock.append(l.count("#")-1)
+                lock.append(l.count("#") - 1)
         if len(key) > 0:
             keys.append(key)
         else:
@@ -33,7 +32,7 @@ def star1(input):
     for k in keys:
         for l in locks:
             for i in range(len(k)):
-                if k[i]+l[i] > 5:
+                if k[i] + l[i] > 5:
                     break
             else:
                 no_overlap += 1
