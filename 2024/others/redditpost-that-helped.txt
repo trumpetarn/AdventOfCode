@@ -1,0 +1,46 @@
+https://old.reddit.com/r/adventofcode/comments/1hla5ql/2024_day_24_part_2_a_guide_on_the_idea_behind_the/
+
+We are given a sequence of logic gates a OP b -> c where 4 pairs of outputs are wrong and we need to find which ones we need to swap such that the initial x given in the input + the initial y == the final z after running the program.
+
+The input is a misconfigured 45-bit Ripple Carry Adder, we are chaining 45 1-bit full adders, where each bit is connected to the carry bit of all the previous bits. A carry bit is the binary equivalent of (6 + 7 = 3, carry the 1), so if we were to, in binary, add 1 + 1, we'd get 0 and a carry bit of 1.
+
+Each output bit is computed using two input bits x, y and a carry bit c. The value of the output is x XOR y XOR c, the next carry bit is (a AND b) OR ((a XOR b) AND c), but we just care about the fact that:
+
+    If the output of a gate is z, then the operation has to be XOR unless it is the last bit.
+    If the output of a gate is not z and the inputs are not x, y then it has to be AND / OR, but not XOR.
+
+If we loop over all gates and extract the ones that do not meet these conditions, we get 6 distinct gates. These are part of our answer, but how do we find the remaining 2?
+
+3 of the gates that we extracted do not meet rule 1, and the other 3 do not meet rule 2. We need to find the order to swap the rule 1 outputs with the rule 2 outputs; to find the correct pairings, we want the number behind associated with the first z-output that we encounter when traversing up the chain after the rule 2 breaker output, so we write a recursive function. Say we have a chain of gates like this: a, b -> c where c is the output of one of our rule 2 gates. Then c, d -> e then e, f -> z09 and we know we want to get to z09 (just an example). Our recursive function would start with the first gate (a, b -> c), see that its output 'c' is used as input in the next gate, follow this to (c, d -> e), see that its output 'e' is used as input in the z09 gate, and finally reach (e, f -> z09). Now we swap c and z09 - 1. The - 1 is there because this function finds the NEXT z gate (z09), not the one we need (z08). You will notice that for all 3 of the gates that break rule 2, the output of this function is an output of one of the rule 1 breakers, this is because the rule 1 breaker simply had its operations swapped with some random intermediate gate (rule 2 breaker) that was calculating some carry bit.
+
+Now apply these swaps to the input, and run part 1 on it. You should get a number close to your part 1 answer, but it is off by some 2n where n <= 44.
+
+This is because one of the carry bits got messed up (our last 2 swapped gates did this), to find out which gates are responsible we take the expected answer (x+y, you get x and y just like you did in part 1 with z but this time with x and y) and the actual answer, and XOR them together. This gives us only the bits that are different, if we print this in binary we get something like this:
+
+1111000000000000000
+
+(the length should be less than 45, and the 1 bits should be grouped together)
+
+Now we count the leading 0 bits, in my case there were 15, but this can be anything from 1 to 44. This means that in my case, the 15th full adder is messing up our carry bits, so we analyze how exactly it does this, and by doing that we find out that there are two operations involving x15, y15, namely x15 AND y15 -> something as well as x15 XOR y15 -> something_else, we simply swap the outputs of these two to get our working full adder. If all bits match immediately, try changing the x and y values in your input.
+
+The answer is the outputs of the initial 6 gates that dont match rules 1 or 2 and the last 2 gates that had their operations swapped.
+
+
+
+
+[–]ElevatedUser
+ 
+11 poäng 4 dagar sen 
+
+I think your solution is technically more correct than mine, but (as typical for AoC), the input seems to be structured to be simpler.
+
+Like you, six (2x3) errors are found through rules 1 and 2. I find the remaining two by looking 1 ahead:
+
+    If you have a XOR gate with inputs x, y, there must be another XOR gate with this gate as an input. Search through all gates for an XOR-gate with this gate as an input; if it does not exist, your (original) XOR gate is faulty.
+    Similarly, if you have an AND-gate, there must be an OR-gate with this gate as an input. If that gate doesn't exist, the original AND gate is faulty.
+
+(These don't apply for the gates with input x00, y00).
+
+Those two rules are enough to find the two remaining faults for my input. I actually have some more tests but those don't find any (new) errors. In any case, I never look more than one ahead.
+
+This won't work if two similar operations are swapped (an AND with another AND, for example; although you could differentiate the two different and-gates in the adder). But, that also goes for your rules 1 and 2.
