@@ -6,9 +6,10 @@ https://adventofcode.com/2025/day/3
 
 from typing import List, Tuple, Dict, Set, Optional
 from pathlib import Path
+import time
 
 
-def read_input(file_path: str = "./inputs/day03.example") -> List[str]:
+def read_input(file_path: str = "./inputs/day03.in") -> List[str]:
     f = Path(file_path).read_text().strip().split("\n")
     return f
 
@@ -34,18 +35,19 @@ def star2(input):
     ans = []
     N=12
     for line in input:
-        p=0
-        lp = ""
-        for n in range(N):
-            l=0
-            print(line[p+n:-1*N+n])
-            for i,v in enumerate(line[p+n:-1*N+n]):
-                if int(v) > l:
-                    l = int(v)
-                    p=i
-            lp += str(l)
-        print(lp)
-        ans.append(int(lp))
+        l = [int(v) for v in line ]
+        idx=0
+        val = 0
+        for i in range(N):
+            window=l[idx:len(l)-N+i+1]
+            if len(window) == 1:
+                val = int(str(val)+line[idx:])
+                break
+            m = max(window)
+            idx = l.index(m,idx)+1
+            val = 10*val + m
+        ans.append(val)
+        
     return sum(ans)
 
 
