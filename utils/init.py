@@ -59,7 +59,7 @@ def setup_parser():
         help="For testing and see what would have cahnged",
     )
     parser.add_argument(
-        "-f", "--test-files", action="store_true", help="Create empty test-files"
+        "-tf", "--test-files", action="store_true", help="Create empty test-files"
     )
     return parser.parse_args()
 
@@ -129,8 +129,8 @@ def main():
                 f.write(file)
 
     if args.test_files:
-        in_file = "{}/inputs/day{:02d}.txt".format(y, args.day)
-        dbg_file = "{}/inputs/day{:02d}_debug.txt".format(y, args.day)
+        in_file = "{}/inputs/day{:02d}.in".format(y, args.day)
+        dbg_file = "{}/inputs/day{:02d}.example".format(y, args.day)
         if not os.path.exists(in_file) and not args.dry_run:
             f = open(in_file, "w+")
             f.write("\n")
