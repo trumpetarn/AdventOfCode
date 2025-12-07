@@ -4,7 +4,7 @@ Day 06
 https://adventofcode.com/2025/day/6
 """
 
-from typing import List, Tuple, Dict, Set, Optional
+from typing import List
 from pathlib import Path
 import math
 
@@ -21,10 +21,10 @@ def read_input(file_path: str = "./inputs/day06.in") -> List[str]:
 def read_input2(file_path: str = "./inputs/day06.in") -> List[str]:
     f = Path(file_path).read_text().strip().split("\n")
     nums = []
-    l = []
+    line = []
     for v in f[:-1]:
         y = [v]
-        l.append(len(v))
+        line.append(len(v))
         nums.append(y)
     operands = f[-1]
     return nums, operands

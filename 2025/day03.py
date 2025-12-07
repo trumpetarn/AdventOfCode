@@ -4,9 +4,8 @@ Day 03
 https://adventofcode.com/2025/day/3
 """
 
-from typing import List, Tuple, Dict, Set, Optional
+from typing import List
 from pathlib import Path
-import time
 
 
 def read_input(file_path: str = "./inputs/day03.in") -> List[str]:
@@ -35,16 +34,16 @@ def star2(input):
     ans = []
     N=12
     for line in input:
-        l = [int(v) for v in line ]
+        format_line = [int(v) for v in line ]
         idx=0
         val = 0
         for i in range(N):
-            window=l[idx:len(l)-N+i+1]
+            window=format_line[idx:len(format_line)-N+i+1]
             if len(window) == 1:
                 val = int(str(val)+line[idx:])
                 break
             m = max(window)
-            idx = l.index(m,idx)+1
+            idx = format_line.index(m,idx)+1
             val = 10*val + m
         ans.append(val)
         

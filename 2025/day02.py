@@ -4,7 +4,7 @@ Day 02
 https://adventofcode.com/2025/day/2
 """
 
-from typing import List, Tuple, Dict, Set, Optional
+from typing import List
 from pathlib import Path
 import textwrap
 
