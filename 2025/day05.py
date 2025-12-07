@@ -8,9 +8,10 @@ from typing import List, Tuple, Dict, Set, Optional
 from pathlib import Path
 
 
-def read_input(file_path: str = "./inputs/day05.example") -> List[str]:
+def read_input(file_path: str = "./inputs/day05.in") -> List[str]:
     f = Path(file_path).read_text().strip().split("\n\n")
     f[0] = [v.split('-') for v in f[0].split('\n')]
+    f[0] = [(int(a),int(b)) for a,b in f[0]]
     f[1] = [int(v) for v in f[1].split('\n')]
     return f
 
@@ -26,25 +27,35 @@ def star1(input):
 
 
 def star2(input):
+    sort_rules = sorted(input[0])
     new_rules = []
-    for i in input[0]:
-        for ri, rule in enumerate(new_rules):
-            if int(rule[0])<=int(i[0]) and int(i[0])<=int(rule[1]):
-                if int(rule[1])<int(i[1]):
-                    new_rules[ri][1] = i[1] 
-                break
-            if int(rule[0])<=int(i[1]) and int(i[1])<=int(rule[1]):
-                if int(i[0])<int(rule[0]):
-                    new_rules[ri][0] = i[0]
-                break
-            if int(rule[0])>int(i[0]) and int(i[1])>int(rule[1]):
-                new_rules[ri] = i
-        else:
-            new_rules.append(i)
+    for ixx in sort_rules:
+        flag = True
+        while flag:
+            print("a")
+            flag = False
+            for ri, new_rule in enumerate(new_rules):
+                if int(new_rule[0])>int(ixx[0]) and int(ixx[1])>int(new_rule[1]):
+                    new_rules[ri] = ixx
+                    flag = True
+                    break
+                if int(new_rule[0])<=int(ixx[0]) and int(ixx[0])<=int(new_rule[1]):
+                    if int(new_rule[1])<int(ixx[1]):
+                        new_rules[ri] = (new_rule[0], ixx[1]) 
+                        flag = True
+                    break
+                if int(new_rule[0])<=int(ixx[1]) and int(ixx[1])<=int(new_rule[1]):
+                    if int(ixx[0])<int(new_rule[0]):
+                        new_rules[ri] = (ixx[0], new_rule[1])
+                        flag = True
+                    break
+            else:
+                new_rules.append(ixx)
+            # print(ixx, new_rules)
     ans = 0
     for a,b in new_rules:
-        ans += int(b)-int(a)
-    print(new_rules)
+        ans += int(b)-int(a)+1
+    # print(new_rules)
     return ans
 
 
